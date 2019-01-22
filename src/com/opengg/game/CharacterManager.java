@@ -1,7 +1,5 @@
 package com.opengg.game;
 
-import com.opengg.game.CharacterData;
-
 import java.util.HashMap;
 
 public class CharacterManager {

@@ -16,6 +16,7 @@ import com.opengg.core.render.text.Text;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.game.CharacterManager;
+import com.opengg.game.Player;
 
 import java.awt.*;
 
@@ -99,6 +100,10 @@ public class DialogueSequence implements KeyboardListener {
             var sound = new Sound(current.sound);
             sound.setGain(current.volume);
             sound.play();
+        }
+
+        if(current.itemAmount != 0){
+            Player.PLAYER.addItem(current.itemSpawn, current.itemAmount);
         }
 
         ai.setDialogueAnimation(current.anim);

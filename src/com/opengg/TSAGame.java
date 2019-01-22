@@ -1,7 +1,7 @@
 package com.opengg;
 
 import com.opengg.components.InteractableAI;
-import com.opengg.components.Player;
+import com.opengg.components.PlayerWorldComponent;
 import com.opengg.components.WorldEnemy;
 import com.opengg.core.audio.AudioController;
 import com.opengg.core.audio.Soundtrack;
@@ -23,8 +23,8 @@ import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
 import com.opengg.core.world.components.*;
 import com.opengg.dialogue.DialogueManager;
-import com.opengg.dialogue.DialogueSequence;
 import com.opengg.game.CharacterManager;
+import com.opengg.game.ItemManager;
 
 import static com.opengg.core.io.input.keyboard.Key.*;
 
@@ -39,16 +39,16 @@ public class TSAGame extends GGApplication {
         OpenGG.initialize(INSTANCE = new TSAGame(), wininfo);
     }
 
-    public Player getCurrentPlayerComponent(){
-        return (Player) WorldEngine.getCurrent().find("player");
+    public PlayerWorldComponent getCurrentPlayerComponent(){
+        return (PlayerWorldComponent) WorldEngine.getCurrent().find("player");
     }
 
     @Override
     public void setup() {
+        ItemManager.initialize();
         BehaviorManager.initialize();
         DialogueManager.initialize();
         CharacterManager.initialize();
-        DialogueManager.loadNodes("dialog.txt");
 
         ShaderController.use("object.vert", "arraytex.frag");
         ShaderController.saveCurrentConfiguration("texanim");
@@ -69,22 +69,20 @@ public class TSAGame extends GGApplication {
         BindController.addBind(ControlType.KEYBOARD, "up", KEY_SPACE);
         BindController.addBind(ControlType.KEYBOARD, "interact", KEY_ENTER);
 
-        WorldEngine.getCurrent().attach(new Player());
+        WorldEngine.getCurrent().attach(new PlayerWorldComponent());
         WorldEngine.getCurrent().attach(new ModelRenderComponent(Resource.getModel("defaults/hemi.bmf")));
         WorldEngine.getCurrent().attach(new LightComponent(
                 Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1), 1000, 512, 512 )));
         WorldEngine.getCurrent().attach(new WorldEnemy().setPositionOffset(new Vector3f(0,0,-10)));
         WorldEngine.getCurrent().attach(new InteractableAI(CharacterManager.generate("bobomb")).setPositionOffset(-8,0,-5));
-        //WorldEngine.getCurrent().attach(new WorldChangeZone("world2", new AABB(2,2,2)).setPositionOffset(new Vector3f(10,0,0)));
+        WorldEngine.getCurrent().attach(new WorldChangeZone("world2", new AABB(2,2,2)).setPositionOffset(new Vector3f(10,0,0)));
         WorldLoader.keepWorld(WorldEngine.getCurrent());
 
         World world2 = new World("world2");
-        world2.attach(new FreeFlyComponent());
+        world2.attach(new PlayerWorldComponent());
         world2.attach(new ModelRenderComponent(Resource.getModel("defaults/torus.bmf")));
         world2.attach(new LightComponent(
                 Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1,0,0), 1000, 512, 512 )));
-
-        world2.attach(new WorldChangeZone("default", new AABB(2,2,2)).setPositionOffset(new Vector3f(0,-5,0)));
 
         WorldLoader.keepWorld(world2);
 

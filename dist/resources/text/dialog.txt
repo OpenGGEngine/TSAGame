@@ -11,6 +11,7 @@ wat do you do next
 
 [{name;bird3}
 You yeeted him
+{item;knife;1}
 ]
 
 [{name;bird4}

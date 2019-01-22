@@ -20,5 +20,8 @@ public class DialogueNode {
 
     String anim = "idle";
 
+    String itemSpawn = "";
+    int itemAmount = 0;
+
     String next;
 }

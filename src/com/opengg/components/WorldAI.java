@@ -30,7 +30,7 @@ public class WorldAI extends Component {
 
     public WorldAI(String character){
         this.character = character;
-        sprite = new SpriteRenderComponent();
+        sprite = SpriteRenderComponent.createComponentFor("test");
         this.attach(sprite);
 
         this.setUpdateDistance(50);

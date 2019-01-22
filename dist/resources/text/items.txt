@@ -1,0 +1,12 @@
+[
+    name=knife;
+    displayName=Knife;
+    desc=Useful for stabbing people and food;
+
+    unique=false;
+    usable=true;
+
+    damage=2;
+
+    sprite=items/knife.png;
+]

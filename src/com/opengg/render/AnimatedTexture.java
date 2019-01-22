@@ -9,7 +9,7 @@ public class AnimatedTexture {
     Texture texture;
     List<String> sources;
 
-    float animDelay = 0.1f;
+    float animDelay = 0.09f;
     boolean repeat = true;
 
     int frame = 0;

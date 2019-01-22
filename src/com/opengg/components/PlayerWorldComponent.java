@@ -18,14 +18,14 @@ import com.opengg.dialogue.DialogueSequence;
 
 import java.util.List;
 
-public class Player extends ControlledComponent implements Actionable {
+public class PlayerWorldComponent extends ControlledComponent implements Actionable {
     SpriteRenderComponent sprite;
     PhysicsComponent physics;
     private Vector3fm control = new Vector3fm();
     float speed = 2;
 
-    public Player(){
-        sprite = new SpriteRenderComponent();
+    public PlayerWorldComponent(){
+        sprite = SpriteRenderComponent.createComponentFor("test");
         this.attach(sprite);
 
         physics = new PhysicsComponent();

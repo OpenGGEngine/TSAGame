@@ -17,7 +17,9 @@ public class DialogueManager implements KeyboardListener {
     private final static Pattern nodePattern = Pattern.compile("\\[(.*?)]", Pattern.DOTALL|Pattern.MULTILINE);
 
     public static void initialize(){
+
         KeyboardController.addKeyboardListener(new DialogueManager());
+        loadNodes("dialog.txt");
     }
 
     public static void loadNodes(String path){
@@ -65,6 +67,9 @@ public class DialogueManager implements KeyboardListener {
             if(commands.get("sound").size() > 1)
                 newNode.volume = Float.parseFloat(commands.get("sound").get(1));
         }
+
+        newNode.itemSpawn = commands.getOrDefault("item", List.of("")).get(0);
+        newNode.itemAmount = Integer.parseInt(commands.getOrDefault("item", List.of("","0")).get(1));
 
         newNode.anim = commands.getOrDefault("anim", List.of("idle")).get(0);
 
