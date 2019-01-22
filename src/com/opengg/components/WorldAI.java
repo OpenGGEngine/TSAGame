@@ -15,13 +15,21 @@ import java.util.List;
 public class WorldAI extends Component {
     PhysicsComponent physics;
     SpriteRenderComponent sprite;
+
+    String character;
+
     String behavior = "none";
     List<String> args = List.of();
 
     HashMap<String, String> savedValues = new HashMap<>();
     float speed = 2;
 
-    public WorldAI(){
+    public WorldAI() {
+        this("default");
+    }
+
+    public WorldAI(String character){
+        this.character = character;
         sprite = new SpriteRenderComponent();
         this.attach(sprite);
 
@@ -29,20 +37,24 @@ public class WorldAI extends Component {
 
         physics = new PhysicsComponent();
         physics.addCollider(new ColliderGroup(new AABB(3,3,3), new ConvexHull(List.of(
-                new Vector3f(-1,-1,-1),
-                new Vector3f(-1,-1,1),
-                new Vector3f(-1,1,-1),
-                new Vector3f(-1,1,1),
-                new Vector3f(1,-1,-1),
-                new Vector3f(1,-1,1),
-                new Vector3f(1,1,-1),
-                new Vector3f(1,1,1)
+                new Vector3f(-1,0,-0.2f),
+                new Vector3f(-1,0,0.2f),
+                new Vector3f(-1,1,-0.2f),
+                new Vector3f(-1,1,0.2f),
+                new Vector3f(1,0,-0.2f),
+                new Vector3f(1,0,0.2f),
+                new Vector3f(1,1,-0.2f),
+                new Vector3f(1,1,0.2f)
         ))));
         this.attach(physics);
     }
 
     public float getSpeed() {
         return speed;
+    }
+
+    public String getCharacter() {
+        return character;
     }
 
     public HashMap<String, String> getSavedValues() {
@@ -54,5 +66,8 @@ public class WorldAI extends Component {
         var vel = BehaviorManager.getBehaviorFunc(behavior).apply(this, args);
         physics.getEntity().velocity = physics.getEntity().velocity.setX(vel.x).setZ(vel.y);
         sprite.setAngle((float) Math.toDegrees(FastMath.atan2(vel.y, vel.x)));
+
+        if(vel.length() != 0) sprite.setAnimToUse("walk");
+        else sprite.setAnimToUse("idle");
     }
 }

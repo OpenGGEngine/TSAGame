@@ -1,9 +1,8 @@
-COMPILED GGSL ERROR SOURCE: From shader terrainmulti.frag with error code 0: 
+COMPILED GGSL ERROR SOURCE: From shader arraytex.frag with error code 0: 
 Shader Compile Log:
 Fragment shader failed to compile with the following errors:
-ERROR: 0:58: error(#160) Cannot convert from: "const float" to: "highp int"
-ERROR: 0:61: error(#166) Integer expression required: []
-ERROR: error(#273) 2 compilation errors.  No code generated
+ERROR: 0:199: error(#216) Vector field selection out of range "z"
+ERROR: error(#273) 1 compilation errors.  No code generated
 #version 420
 layout(location=0) out vec4 fcolor;
 in vertexData {
@@ -61,12 +60,12 @@ vec3 fragToLight = (pos - light.lightpos.xyz);
 float currentDepth = (length(fragToLight) / light.lightdistance);
 float shadow = 0.0f;
 float bias = 5.0E-4f;
-int samples = 20.0f;
+int samples = 20;
 float diskRadius = ((1.0f + (viewDistance / light.lightdistance)) / 25.0f);
-for(float i = 0; (i < samples); i++){
+for(int i = 0; (i < samples); i++){
 float closestDepth = texture(cube2, (fragToLight + (sampleOffsetDirections[i] * diskRadius))).r;
 if(((currentDepth - bias) < closestDepth)){
-shadow = 1.0f;
+shadow += 1.0f;
 }else{
 }
 ;
@@ -140,8 +139,7 @@ mat3 TBN = cotangent_frame(N, -V, texcoord);
 return normalize((TBN * map));
 } 
 
-void useMaterial(Material mat) {
-color = texture(Kd, textureCoord);
+void useMaterial(Material mat, vec4 color) {
 diffuse = color.rgb;
 emmisive = (texture(em, textureCoord).xyz * mat.hasem);
 trans = color.a;
@@ -150,6 +148,10 @@ specular = ((getTex(Ks).xyz * mat.hasspec) + (mat.ks * (1 - mat.hasspec)));
 specpow = mat.ns;
 specpowvec = ((getTex(Ns).xyz * mat.hasspec) + vec3((mat.ns * (1 - int(mat.hasspec)))));
 n = ((calculatenormal(normalize((model * vec4(norm, 0.0f)).xyz), (pos.xyz - camera), texture(bump, textureCoord).xyz, textureCoord) * mat.hasnormmap) + (normalize((model * vec4(norm, 0.0f)).xyz) * (1 - mat.hasnormmap)));
+} 
+
+void useMaterial(Material mat) {
+useMaterial(mat, texture(Kd, textureCoord));
 } 
 
 uniform float uvmultx;
@@ -178,27 +180,37 @@ float cosAlpha = max(dot(n, halfwayDir), 0.0f);
 vec3 fspec = ((specular * specpowvec) * pow(cosAlpha, specpow));
 float shadowcover = getShadowCoverage(light);
 vec3 fragColor = (((((fdif + fspec) * attenuation) * shadowcover) * light.color.rgb) + ambient);
-return vec3(shadowcover);
+return fragColor;
 } 
 
-uniform sampler2DArray terrain;
+uniform sampler2DArray anim;
+int layer;
+int invertMultiplier;
 void main() {
-vec4 blendMapColor = getTex(Ka);
-float backTextureAmount = (1 - ((blendMapColor.r + blendMapColor.b) + blendMapColor.g));
-vec2 tiledMapEditor = (textureCoord * 40);
-vec4 wcolor = (texture(terrain, vec3(tiledMapEditor, 0)) * backTextureAmount);
-vec4 wcolorr = (texture(terrain, vec3(tiledMapEditor, 1)) * blendMapColor.r);
-vec4 wcolorg = (texture(terrain, vec3(tiledMapEditor, 2)) * blendMapColor.g);
-vec4 wcolorb = (texture(terrain, vec3(tiledMapEditor, 3)) * blendMapColor.b);
-diffuse = (((wcolor + wcolorr) + wcolorg) + wcolorb).xyz;
-specular = vec3(1, 1, 1);
-specpow = 1024;
-specpowvec = vec3(specpow);
-n = normalize((vec4(norm, 0.0f) * model).xyz);
 generatePhongData();
-vec3 col = (diffuse * 0.2f);
+Material material;
+material.hasnormmap = 0.0f;
+material.hasambmap = 0.0f;
+material.hasspec = 0.0f;
+material.hasspecpow = 0.0f;
+material.hascolormap = 1.0f;
+material.hasem = 0.0f;
+material.ks = vec3(1, 1, 1);
+material.ka = vec3(0, 0, 0);
+material.kd = vec3(0, 0, 0);
+material.ns = 128;
+vec4 colorino = vec4(1, 1, 1, 1);
+if((invertMultiplier == -1)){
+colorino = texture(anim, vec3(vec2((1 - textureCoord.x), textureCoord.z), layer));
+}else{
+colorino = texture(anim, vec3(textureCoord, layer));
+}
+;
+useMaterial(material, colorino);
+vec3 col = ambient;
+col += emmisive;
 for(int i = 0; (i < 1); i++){
-col = getPhongFrom(lights[i]);
+col += getPhongFrom(lights[i]);
 }
 ;
 fcolor = vec4(col, 1);

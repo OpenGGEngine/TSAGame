@@ -1,5 +1,6 @@
 package com.opengg.dialogue;
 
+import com.opengg.core.audio.SoundData;
 import com.opengg.core.math.Tuple;
 
 import java.util.ArrayList;
@@ -13,6 +14,11 @@ public class DialogueNode {
 
     String triggerTarget;
     String triggerData;
+
+    SoundData sound;
+    float volume = 1.0f;
+
+    String anim = "idle";
 
     String next;
 }

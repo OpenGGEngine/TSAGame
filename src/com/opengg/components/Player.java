@@ -1,6 +1,5 @@
 package com.opengg.components;
 
-import com.opengg.core.engine.OpenGG;
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.math.Vector3fm;
@@ -31,19 +30,19 @@ public class Player extends ControlledComponent implements Actionable {
 
         physics = new PhysicsComponent();
         physics.addCollider(new ColliderGroup(new AABB(3,3,3), new ConvexHull(List.of(
-                new Vector3f(-1,-1,-1),
-                new Vector3f(-1,-1,1),
-                new Vector3f(-1,1,-1),
-                new Vector3f(-1,1,1),
-                new Vector3f(1,-1,-1),
-                new Vector3f(1,-1,1),
-                new Vector3f(1,1,-1),
-                new Vector3f(1,1,1)
+                new Vector3f(-1,0,-0.2f),
+                new Vector3f(-1,0,0.2f),
+                new Vector3f(-1,1,-0.2f),
+                new Vector3f(-1,1,0.2f),
+                new Vector3f(1,0,-0.2f),
+                new Vector3f(1,0,0.2f),
+                new Vector3f(1,1,-0.2f),
+                new Vector3f(1,1,0.2f)
         ))));
         this.attach(physics);
 
         var camera = new CameraComponent();
-        camera.setPositionOffset(new Vector3f(0,3,10));
+        camera.setPositionOffset(new Vector3f(0,1.5f,6));
         camera.setRotationOffset(new Vector3f(8,0,0));
         this.attach(camera);
 
@@ -58,6 +57,9 @@ public class Player extends ControlledComponent implements Actionable {
         Vector3f vel = this.getRotation().transform(new Vector3f(control).multiply(speed));
         physics.getEntity().velocity = physics.getEntity().velocity.setX(vel.x).setZ(vel.z);
         sprite.setAngle((float) Math.toDegrees(FastMath.atan2(vel.z, vel.x)));
+
+        if(vel.length() != 0) sprite.setAnimToUse("walk");
+        else sprite.setAnimToUse("idle");
     }
 
 
@@ -83,9 +85,10 @@ public class Player extends ControlledComponent implements Actionable {
                 case "interact":
                     for(var component : getWorld().getAll()){
                         if(component instanceof InteractableAI) {
-                            if (((InteractableAI) component).allowInteraction) {
-                                if (component.getPosition().distanceTo(this.getPosition()) < 3f) {
-                                    DialogueManager.setCurrent(new DialogueSequence(((InteractableAI) component).dialogue));
+                            var ai = (InteractableAI) component;
+                            if (ai.allowInteraction()) {
+                                if (ai.getPosition().distanceTo(this.getPosition()) < 3f) {
+                                    DialogueManager.setCurrent(new DialogueSequence(ai));
                                 }
                             }
                         }

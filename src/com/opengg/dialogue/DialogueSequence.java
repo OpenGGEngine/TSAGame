@@ -1,5 +1,8 @@
 package com.opengg.dialogue;
 
+import com.opengg.components.InteractableAI;
+import com.opengg.components.WorldAI;
+import com.opengg.core.audio.Sound;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.gui.GUI;
@@ -12,11 +15,11 @@ import com.opengg.core.math.Vector2f;
 import com.opengg.core.render.text.Text;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.world.WorldEngine;
+import com.opengg.game.CharacterManager;
 
 import java.awt.*;
 
 public class DialogueSequence implements KeyboardListener {
-    boolean complete;
     DialogueNode current;
 
     GUI currentGUI;
@@ -24,14 +27,20 @@ public class DialogueSequence implements KeyboardListener {
 
     GUIText text;
 
+    String title;
+
+    InteractableAI ai;
+
     float counter = 0;
     int textLength = 0;
 
     int pointer = 0;
 
-    public DialogueSequence(String start){
-        this.current = DialogueManager.getNodeByName(start);
-        if(start == null) throw new RuntimeException("Failed to find dialog named " + start);
+    public DialogueSequence(InteractableAI ai){
+        this.ai = ai;
+        this.title = CharacterManager.getExisting(ai.getCharacter()).getDisplayName();
+        this.enableNode(ai.getDialogue());
+        if(ai.getDialogue() == null) throw new RuntimeException("Failed to find dialog named " + ai.getDialogue());
     }
 
     public void start(){
@@ -46,6 +55,7 @@ public class DialogueSequence implements KeyboardListener {
         GUIController.addAndUse(currentGUI, "dialogue");
         DialogueManager.setCurrent(this);
 
+        ai.setInDialogue(true);
     }
 
     public void update(float delta){
@@ -55,7 +65,7 @@ public class DialogueSequence implements KeyboardListener {
             if(textLength < current.text.length())
                 textLength += 1;
 
-            var printedString = current.text.substring(0, textLength);
+            var printedString = title + ":\n\n" + current.text.substring(0, textLength);
             if(textLength == current.text.length()){
                 printedString += "\n";
                 for(int i = 0; i < current.options.size(); i++){
@@ -75,28 +85,39 @@ public class DialogueSequence implements KeyboardListener {
         WorldEngine.getCurrent().find("player").setEnabled(true);
         GUIController.useGUI(previousGUI);
         DialogueManager.setCurrent(null);
+
+        ai.setInDialogue(false);
+    }
+
+    public void enableNode(String next){
+        current = DialogueManager.getNodeByName(next);
+        textLength = 0;
+        counter = 0;
+        pointer = 0;
+
+        if(current.sound != null){
+            var sound = new Sound(current.sound);
+            sound.setGain(current.volume);
+            sound.play();
+        }
+
+        ai.setDialogueAnimation(current.anim);
     }
 
     @Override
     public void keyPressed(int key) {
         if(key == Key.KEY_SPACE){
-            if(!current.hasOpts){
+            if(textLength != current.text.length()){
+                textLength = current.text.length();
+            }else if(!current.hasOpts){
                 if(!current.next.isEmpty()){
-                    current = DialogueManager.getNodeByName(current.next);
-                    textLength = 0;
-                    counter = 0;
-                    pointer = 0;
+                    enableNode(current.next);
                 }else{
                     OpenGG.asyncExec(this::end);
                 }
             }else{
-                if(textLength == current.text.length()){
-                    var next = current.options.get(pointer).y;
-                    current = DialogueManager.getNodeByName(next);
-                    textLength = 0;
-                    counter = 0;
-                    pointer = 0;
-                }
+                var next = current.options.get(pointer).y;
+                enableNode(next);
             }
         }else if(key == Key.KEY_DOWN){
             if(current.hasOpts)

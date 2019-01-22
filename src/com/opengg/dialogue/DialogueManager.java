@@ -60,6 +60,14 @@ public class DialogueManager implements KeyboardListener {
         newNode.text = section.trim();
         newNode.next = commands.getOrDefault("next", List.of("")).get(0);
 
+        if(commands.containsKey("sound")){
+            newNode.sound = Resource.getSoundData(commands.get("sound").get(0));
+            if(commands.get("sound").size() > 1)
+                newNode.volume = Float.parseFloat(commands.get("sound").get(1));
+        }
+
+        newNode.anim = commands.getOrDefault("anim", List.of("idle")).get(0);
+
         var name = commands.get("name");
 
         if(name == null) throw new RuntimeException("Failed to parse dialogue node, no name");
