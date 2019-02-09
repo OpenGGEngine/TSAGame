@@ -11,10 +11,14 @@ wat do you do next
 
 [{name;bird3}
 You yeeted him
+Congrats you got a knife
 {item;knife;1}
+{quest;findSad;say}
 ]
 
 [{name;bird4}
 you missed cause pacs uair has like 0 horizontal range
 wait no thats his uptilt his uair is pretty good
+{item;water;1}
+{quest;findSad;tell}
 ]

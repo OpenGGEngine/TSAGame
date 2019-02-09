@@ -9,6 +9,7 @@ public class CharacterDataBuilder {
     private int maxHealth;
     private String displayName;
     private boolean hostile;
+    private String sprite;
 
     private boolean unique;
 
@@ -32,6 +33,11 @@ public class CharacterDataBuilder {
         return this;
     }
 
+    public CharacterDataBuilder setSprite(String sprite) {
+        this.sprite = sprite;
+        return this;
+    }
+
     public CharacterDataBuilder setHostile(boolean hostile) {
         this.hostile = hostile;
         return this;
@@ -47,6 +53,6 @@ public class CharacterDataBuilder {
     }
 
     public CharacterData createCharacterData() {
-        return new CharacterData(name, attacks, maxHealth, displayName, hostile);
+        return new CharacterData(name, attacks, maxHealth, displayName, sprite, hostile);
     }
 }

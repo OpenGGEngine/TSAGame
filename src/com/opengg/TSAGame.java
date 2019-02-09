@@ -1,17 +1,15 @@
 package com.opengg;
 
-import com.opengg.components.InteractableAI;
-import com.opengg.components.PlayerWorldComponent;
-import com.opengg.components.WorldEnemy;
+import com.opengg.components.*;
 import com.opengg.core.audio.AudioController;
 import com.opengg.core.audio.Soundtrack;
+import com.opengg.core.console.GGConsole;
 import com.opengg.core.engine.BindController;
 import com.opengg.core.engine.GGApplication;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.io.ControlType;
 import com.opengg.core.math.Vector3f;
-import com.opengg.core.physics.collision.AABB;
 import com.opengg.core.render.light.Light;
 import com.opengg.core.render.shader.ShaderController;
 import com.opengg.core.render.texture.Texture;
@@ -21,10 +19,14 @@ import com.opengg.core.world.Skybox;
 import com.opengg.core.world.World;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
-import com.opengg.core.world.components.*;
+import com.opengg.core.world.components.LightComponent;
+import com.opengg.core.world.components.ModelRenderComponent;
 import com.opengg.dialogue.DialogueManager;
+import com.opengg.game.BattleManager;
 import com.opengg.game.CharacterManager;
 import com.opengg.game.ItemManager;
+import com.opengg.game.QuestManager;
+import com.opengg.gui.GameMenu;
 
 import static com.opengg.core.io.input.keyboard.Key.*;
 
@@ -45,10 +47,16 @@ public class TSAGame extends GGApplication {
 
     @Override
     public void setup() {
+        this.applicationName = "TSA Game";
+        GGConsole.log("Initializing TSA Game submanagers");
+
+        GameMenu.initialize();
         ItemManager.initialize();
         BehaviorManager.initialize();
         DialogueManager.initialize();
         CharacterManager.initialize();
+        QuestManager.initialize();
+        BattleManager.initialize();
 
         ShaderController.use("object.vert", "arraytex.frag");
         ShaderController.saveCurrentConfiguration("texanim");
@@ -75,11 +83,12 @@ public class TSAGame extends GGApplication {
                 Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1), 1000, 512, 512 )));
         WorldEngine.getCurrent().attach(new WorldEnemy().setPositionOffset(new Vector3f(0,0,-10)));
         WorldEngine.getCurrent().attach(new InteractableAI(CharacterManager.generate("bobomb")).setPositionOffset(-8,0,-5));
-        WorldEngine.getCurrent().attach(new WorldChangeZone("world2", new AABB(2,2,2)).setPositionOffset(new Vector3f(10,0,0)));
+        WorldEngine.getCurrent().attach(new WorldItem("emak", 2).setPositionOffset(new Vector3f(0,0,4)));
+        WorldEngine.getCurrent().attach(new TSAWorldChangeZone("world2", "entry1").setPositionOffset(new Vector3f(10,0,0)));
         WorldLoader.keepWorld(WorldEngine.getCurrent());
 
         World world2 = new World("world2");
-        world2.attach(new PlayerWorldComponent());
+        world2.attach(new WorldEntryZone().setPositionOffset(new Vector3f(10,0,10)).setName("entry1"));
         world2.attach(new ModelRenderComponent(Resource.getModel("defaults/torus.bmf")));
         world2.attach(new LightComponent(
                 Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1,0,0), 1000, 512, 512 )));
@@ -102,13 +111,19 @@ public class TSAGame extends GGApplication {
                 Resource.getTexturePath("skybox\\majestic_rt.png"),
                 Resource.getTexturePath("skybox\\majestic_lf.png")), 500f));
 
-        WindowController.getWindow().setCursorLock(true);
+        WindowController.getWindow().setCursorLock(false);
 
         Soundtrack test = new Soundtrack();
         test.addSong(Resource.getSoundData("stardust.ogg"));
         test.play();
 
-        AudioController.setGlobalGain(0.2f);
+        //Player.PLAYER.addItem("knife", 1);
+
+        QuestManager.beginQuest("findSad");
+        QuestManager.beginQuest("getBand");
+
+
+        AudioController.setGlobalGain(0.0f);
     }
 
     @Override
@@ -118,6 +133,9 @@ public class TSAGame extends GGApplication {
 
     @Override
     public void update(float delta) {
+        GameMenu.update();
         DialogueManager.update(delta);
+        QuestManager.update(delta);
+        BattleManager.update();
     }
 }

@@ -1,2 +1,2 @@
-java -jar OpenGG_Test.jar
+java -jar lib\TSAGame.jar
 pause

@@ -12,15 +12,18 @@ public class CharacterData {
 
     private String displayName;
 
+    private String sprite;
+
     private boolean hostile;
 
-    public CharacterData(String name, List<Attack> attacks, int maxHealth, String displayName, boolean hostile) {
+    public CharacterData(String name, List<Attack> attacks, int maxHealth, String displayName, String sprite, boolean hostile) {
         this.name = name;
         this.attacks = attacks;
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.displayName = displayName;
         this.hostile = hostile;
+        this.sprite = sprite;
     }
 
     public String getName() {
@@ -49,6 +52,10 @@ public class CharacterData {
 
     public String getDisplayName() {
         return displayName;
+    }
+
+    public String getSprite() {
+        return sprite;
     }
 
     public boolean isHostile() {

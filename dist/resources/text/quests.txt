@@ -1,0 +1,42 @@
+[
+    name=findSad;
+    displayName=Find Bob-omb;
+
+    firstState=ask;
+
+    {
+        name=ask;
+        displayName=Ask Villagers;
+
+        completionType=item;
+
+        completionValue=emak:2;
+    }
+
+    {
+        name=say;
+        displayName=Do it to villagers;
+        requirements=tell;
+    }
+
+    {
+        name=tell;
+        displayName=Tell villagers;
+        requirements=ask;
+    }
+
+]
+
+[
+
+    name=getBand;
+    displayName=Talk to the man tm;
+
+    firstState=talk;
+
+    {
+        name=talk;
+        displayName=Are they there?;
+
+    }
+]

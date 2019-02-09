@@ -1,7 +1,6 @@
 package com.opengg.dialogue;
 
 import com.opengg.components.InteractableAI;
-import com.opengg.components.WorldAI;
 import com.opengg.core.audio.Sound;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
@@ -17,6 +16,7 @@ import com.opengg.core.render.texture.Texture;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.game.CharacterManager;
 import com.opengg.game.Player;
+import com.opengg.game.QuestManager;
 
 import java.awt.*;
 
@@ -24,7 +24,6 @@ public class DialogueSequence implements KeyboardListener {
     DialogueNode current;
 
     GUI currentGUI;
-    String previousGUI;
 
     GUIText text;
 
@@ -45,7 +44,6 @@ public class DialogueSequence implements KeyboardListener {
     }
 
     public void start(){
-        previousGUI = GUIController.getCurrentName();
         WorldEngine.getCurrent().find("player").setEnabled(false);
 
         currentGUI = new GUI();
@@ -84,7 +82,7 @@ public class DialogueSequence implements KeyboardListener {
 
     public void end(){
         WorldEngine.getCurrent().find("player").setEnabled(true);
-        GUIController.useGUI(previousGUI);
+        GUIController.deactivateGUI("dialogue");
         DialogueManager.setCurrent(null);
 
         ai.setInDialogue(false);
@@ -104,6 +102,14 @@ public class DialogueSequence implements KeyboardListener {
 
         if(current.itemAmount != 0){
             Player.PLAYER.addItem(current.itemSpawn, current.itemAmount);
+        }
+
+        if(!current.quest.equals("")){
+            if(!current.questState.equals("")){
+                QuestManager.advanceSubQuest(current.quest, current.questState);
+            }else{
+                QuestManager.beginQuest(current.quest);
+            }
         }
 
         ai.setDialogueAnimation(current.anim);

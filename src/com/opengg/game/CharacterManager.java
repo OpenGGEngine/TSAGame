@@ -13,6 +13,7 @@ public class CharacterManager {
                                 .setMaxHealth(100)
                                 .setHostile(false)
                                 .setName("bobomb")
+                                .setSprite("test")
                                 .setUnique(true));
     }
 
@@ -21,6 +22,8 @@ public class CharacterManager {
     }
 
     public static String generate(String name){
+        if(!builders.containsKey(name)) throw new RuntimeException("Failed to find character " + name);
+
         var builder = builders.get(name);
         int amount = characterSpawnCount.getOrDefault(name, 0);
 
@@ -33,5 +36,4 @@ public class CharacterManager {
         characters.put(newID, newCharacter);
         return newID;
     }
-
 }

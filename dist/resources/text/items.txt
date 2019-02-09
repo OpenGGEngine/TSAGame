@@ -8,5 +8,32 @@
 
     damage=2;
 
-    sprite=items/knife.png;
+    sprite=items/smoke.png;
 ]
+
+[
+    name=emak;
+    displayName=Emak;
+    desc=Thinks that w,x,y,z is right;
+
+    unique=false;
+    usable=true;
+
+    damage=50;
+
+    sprite=items/emak.png;
+]
+
+[
+    name=water;
+    displayName=Water;
+    desc=We dont have much in the mill;
+
+    unique=false;
+    usable=true;
+
+    damage=50;
+
+    sprite=items/water.jpg;
+]
+

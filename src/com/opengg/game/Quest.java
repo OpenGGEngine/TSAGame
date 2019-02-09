@@ -1,22 +1,36 @@
 package com.opengg.game;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Quest {
-    boolean started;
-    boolean complete;
+    public QuestState state = QuestState.NOT_STARTED;
+    public String name;
+    public String displayName;
 
-    String name;
-    String displayName;
+    public String desc = "";
 
-    List<QuestState> states = new ArrayList<>();
+    public String firstState;
 
-    class QuestState{
-        String name;
-        String displayName;
+    public String currentSubQuest;
 
-        String activationType;
-        String activationValue;
+    public Map<String, SubQuest> subQuests;// = new ArrayList<>();
+
+    public static class SubQuest {
+        public QuestState state = QuestState.NOT_STARTED;
+
+        public String name;
+        public String displayName;
+
+        public String completionType;
+        public String completionValue;
+
+        public List<String> requirements;
+
+        public boolean questEnder = false;
+    }
+
+    public enum QuestState{
+        NOT_STARTED, ACTIVE, DONE, FAILED
     }
 }

@@ -1,5 +1,6 @@
 package com.opengg.dialogue;
 
+import com.opengg.core.console.GGConsole;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.io.FileStringLoader;
 import com.opengg.core.io.input.keyboard.KeyboardController;
@@ -20,6 +21,7 @@ public class DialogueManager implements KeyboardListener {
 
         KeyboardController.addKeyboardListener(new DialogueManager());
         loadNodes("dialog.txt");
+        GGConsole.log("Loaded " + nodes.size() + " dialogue nodes");
     }
 
     public static void loadNodes(String path){
@@ -72,6 +74,14 @@ public class DialogueManager implements KeyboardListener {
         newNode.itemAmount = Integer.parseInt(commands.getOrDefault("item", List.of("","0")).get(1));
 
         newNode.anim = commands.getOrDefault("anim", List.of("idle")).get(0);
+
+        if(commands.containsKey("quest")){
+            newNode.quest = commands.get("quest").get(0);
+            if(commands.get("quest").size() == 2){
+                newNode.questState = commands.get("quest").get(1);
+            }
+        }
+
 
         var name = commands.get("name");
 

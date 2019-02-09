@@ -24,4 +24,7 @@ public class DialogueNode {
     int itemAmount = 0;
 
     String next;
+
+    String quest = "";
+    String questState = "";
 }

@@ -3,6 +3,7 @@ package com.opengg.game;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.io.FileStringLoader;
 import com.opengg.core.math.Tuple;
+import com.opengg.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,13 +35,7 @@ public class ItemManager {
     }
 
     private static void processItem(String item){
-        var lines = item.split(";");
-        var sections = Arrays.stream(lines)
-                .map(String::trim)
-                .filter(s -> !s.isEmpty())
-                .map(s -> Tuple.of(s.substring(0,s.indexOf("=")), s.substring(s.indexOf("=") + 1)))
-                .map(s -> Tuple.of(s.x.trim(), s.y.trim()))
-                .collect(Collectors.toMap(s -> s.x, s -> s.y));
+        var sections = StringUtil.splitLines(item);
 
         ItemBuilder builder = new ItemBuilder();
         builder.setName(sections.get("name"));
@@ -57,13 +52,13 @@ public class ItemManager {
 
     public static Item generate(String name){
         var builder = generators.get(name);
-        if(builder.isUnique()){
+        /*if(builder.isUnique()){
             if(uniqueCreated.contains(name)){
                 return null;
             }else{
                 uniqueCreated.add(name);
             }
-        }
+        }*/
 
         return builder.createItem();
     }

@@ -1,14 +1,18 @@
 package com.opengg.components;
 
+import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.math.Tuple;
 import com.opengg.core.math.Vector2f;
 import com.opengg.core.render.objects.ObjectCreator;
 import com.opengg.core.render.shader.ShaderController;
+import com.opengg.core.util.GGInputStream;
+import com.opengg.core.util.GGOutputStream;
 import com.opengg.core.world.components.RenderComponent;
 import com.opengg.render.AnimatedTexture;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -25,10 +29,11 @@ public class SpriteRenderComponent extends RenderComponent {
 
     AnimatedTexture current;
 
-    public static SpriteRenderComponent createComponentFor(String character){
-        var path = "resources/tex/characters/" + character + "/";
+    String character;
 
-        var dir = new File(path);
+    private static Map<String, AnimatedTexture> getTextureMapFor(String character) {
+        var path = "resources/tex/characters/" + character + "/";
+        var dir = new File(Resource.getAbsoluteFromLocal(path));
 
         var files = dir.list();
 
@@ -57,7 +62,7 @@ public class SpriteRenderComponent extends RenderComponent {
             list.sort(Comparator.comparingInt(x -> x.y));
         }
 
-        var finalMap = temporaryMap.entrySet().stream()
+        return temporaryMap.entrySet().stream()
                 .map(e -> Map.entry(
                         e.getKey(),
                         new AnimatedTexture(
@@ -65,18 +70,26 @@ public class SpriteRenderComponent extends RenderComponent {
                                     .map(ee -> ee.x)
                                     .collect(Collectors.toList()))))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-
-        return new SpriteRenderComponent(finalMap);
     }
 
     public SpriteRenderComponent(){
-        this(new HashMap<>());
-    }
-
-    public SpriteRenderComponent(Map<String, AnimatedTexture> anims){
-        this.textures = anims;
         this.setDrawable(ObjectCreator.createSquare(new Vector2f(-1,-1), new Vector2f(1,1), 0));
         this.setShader("texanim");
+    }
+
+    public SpriteRenderComponent(String character){
+        this();
+        setCharacter(character);
+    }
+
+    public void setCharacter(String character){
+        this.character = character;
+        this.textures = getTextureMapFor(character);
+        current = textures.get("idle");
+    }
+
+    public String getCharacter() {
+        return character;
     }
 
     public float getAngle() {
@@ -110,5 +123,18 @@ public class SpriteRenderComponent extends RenderComponent {
 
         current.use();
         super.render();
+    }
+
+    @Override
+    public void serialize(GGOutputStream out) throws IOException{
+        super.serialize(out);
+        out.write(character);
+    }
+
+    @Override
+    public void deserialize(GGInputStream in) throws IOException{
+        super.deserialize(in);
+        var chara = in.readString();
+        setCharacter(chara);
     }
 }

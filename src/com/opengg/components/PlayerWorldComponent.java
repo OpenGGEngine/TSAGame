@@ -1,5 +1,6 @@
 package com.opengg.components;
 
+import com.opengg.core.Configuration;
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.math.Vector3fm;
@@ -25,7 +26,7 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
     float speed = 2;
 
     public PlayerWorldComponent(){
-        sprite = SpriteRenderComponent.createComponentFor("test");
+        sprite = new SpriteRenderComponent(Configuration.get("playerSprite"));
         this.attach(sprite);
 
         physics = new PhysicsComponent();

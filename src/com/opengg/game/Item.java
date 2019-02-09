@@ -1,16 +1,16 @@
 package com.opengg.game;
 
 public class Item {
-    String name;
-    String displayName;
-    String desc;
+    public String name;
+    public String displayName;
+    public String desc;
 
-    boolean usable;
-    boolean unique;
+    public boolean usable;
+    public boolean unique;
 
-    int damage;
-
-    String sprite;
+    public int damage;
+     
+    public String sprite;
 
     public Item(String name, String displayName, String desc, boolean usable, boolean unique, int damage, String sprite) {
         this.name = name;

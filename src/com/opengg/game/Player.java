@@ -12,6 +12,8 @@ public class Player {
     HashMap<String, Integer> items = new HashMap<>();
     List<String> partners = new ArrayList<>();
 
+
+
     public Player(){
 
     }
@@ -26,8 +28,7 @@ public class Player {
         else
             items.put(item, items.get(item) + amount);
 
-        var itemss = ItemManager.generate(item);
-        System.out.println(itemss.desc);
+        //var itemss = ItemManager.generate(item);
     }
 
     public int getItemCount(String item){
