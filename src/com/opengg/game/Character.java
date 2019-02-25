@@ -2,10 +2,12 @@ package com.opengg.game;
 
 import java.util.List;
 
-public class CharacterData {
+public class Character {
+    private String id;
+
     private String name;
 
-    private List<Attack> attacks;
+    private Inventory inventory;
 
     private float health;
     private int maxHealth;
@@ -16,26 +18,29 @@ public class CharacterData {
 
     private boolean hostile;
 
-    public CharacterData(String name, List<Attack> attacks, int maxHealth, String displayName, String sprite, boolean hostile) {
+    private boolean living = true;
+
+    public Character(String name, Inventory inventory, int maxHealth, String displayName, String sprite, boolean hostile, String id) {
         this.name = name;
-        this.attacks = attacks;
+        this.inventory = inventory;
         this.health = maxHealth;
         this.maxHealth = maxHealth;
         this.displayName = displayName;
         this.hostile = hostile;
         this.sprite = sprite;
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<Attack> getAttacks() {
-        return attacks;
+    public Inventory getInventory() {
+        return inventory;
     }
 
-    public void setAttacks(List<Attack> attacks) {
-        this.attacks = attacks;
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     public float getHealth() {
@@ -64,5 +69,17 @@ public class CharacterData {
 
     public void setHostile(boolean hostile) {
         this.hostile = hostile;
+    }
+
+    public boolean isLiving() {
+        return living;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setLiving(boolean living) {
+        this.living = living;
     }
 }

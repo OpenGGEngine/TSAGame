@@ -27,4 +27,23 @@ public class DialogueNode {
 
     String quest = "";
     String questState = "";
+
+    @Override
+    public String toString() {
+        return "DialogueNode{" +
+                "text='" + text + '\'' +
+                ", hasOpts=" + hasOpts +
+                ", options=" + options +
+                ", triggerTarget='" + triggerTarget + '\'' +
+                ", triggerData='" + triggerData + '\'' +
+                ", sound=" + sound +
+                ", volume=" + volume +
+                ", anim='" + anim + '\'' +
+                ", itemSpawn='" + itemSpawn + '\'' +
+                ", itemAmount=" + itemAmount +
+                ", next='" + next + '\'' +
+                ", quest='" + quest + '\'' +
+                ", questState='" + questState + '\'' +
+                '}';
+    }
 }

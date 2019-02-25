@@ -1,11 +1,10 @@
 package com.opengg.game;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 
 public class BattleInfo {
-    public List<String> allies = new ArrayList<>();
-    public List<String> enemies = new ArrayList<>();
+    public HashSet<String> allies = new HashSet<>();
+    public HashSet<String> enemies = new HashSet<>();
 
     public String battleWorld = "battle.bwf";
     public String battleEnvironment;

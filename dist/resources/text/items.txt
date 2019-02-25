@@ -6,9 +6,21 @@
     unique=false;
     usable=true;
 
-    damage=2;
-
     sprite=items/smoke.png;
+
+    type=item;
+
+    targeted=true;
+
+    {
+        name=damage;
+        value=90;
+    }
+
+    {
+        name=heal;
+        value=2;
+    }
 ]
 
 [
@@ -19,7 +31,9 @@
     unique=false;
     usable=true;
 
-    damage=50;
+    type=item;
+
+    targeted=true;
 
     sprite=items/emak.png;
 ]
@@ -32,8 +46,17 @@
     unique=false;
     usable=true;
 
-    damage=50;
+    type=ability;
+
+    targeted=false;
+
+
 
     sprite=items/water.jpg;
+
+    {
+        name=heal;
+        value=2;
+    }
 ]
 

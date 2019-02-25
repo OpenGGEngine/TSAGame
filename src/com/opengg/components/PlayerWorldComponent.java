@@ -89,7 +89,7 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
                             var ai = (InteractableAI) component;
                             if (ai.allowInteraction()) {
                                 if (ai.getPosition().distanceTo(this.getPosition()) < 3f) {
-                                    DialogueManager.setCurrent(new DialogueSequence(ai));
+                                    new DialogueSequence(ai).start();
                                 }
                             }
                         }

@@ -102,7 +102,7 @@ public class GameMenu {
 
             holder.clear();
 
-            for(var item : Player.PLAYER.getItems().entrySet()){
+            for(var item : Player.PLAYER.getInventory().getItems().entrySet()){
                 if(item.getValue() == 0) continue;
 
                 var itemGroup = new GUIGroup(new Vector2f(0, 0.40f - (i * 0.08f)));
@@ -163,9 +163,9 @@ public class GameMenu {
                 int cline2 = currentLine;
 
                 singleQuest.addItem("listener", new GUIButton(
-                        new Vector2f(0.029f,-0.02f),
-                        new Vector2f(0.18f, 0.06f),
-                        Texture.ofColor(Color.RED, 0.5f),
+                        new Vector2f(0.00f,-0.01f),
+                        new Vector2f(0.21f, 0.048f),
+                        Texture.ofColor(Color.RED, 0.0f),
                         () -> pointer = cline2));
 
                 questHolder.addItem(quest.name, singleQuest);

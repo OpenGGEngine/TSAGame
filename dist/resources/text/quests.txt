@@ -14,15 +14,15 @@
     }
 
     {
-        name=say;
-        displayName=Do it to villagers;
-        requirements=tell;
-    }
-
-    {
         name=tell;
         displayName=Tell villagers;
         requirements=ask;
+    }
+
+    {
+        name=say;
+        displayName=Do it to villagers;
+        requirements=tell;
     }
 
 ]

@@ -8,6 +8,7 @@ import com.opengg.core.physics.collision.ColliderGroup;
 import com.opengg.core.physics.collision.ConvexHull;
 import com.opengg.core.util.GGInputStream;
 import com.opengg.core.util.GGOutputStream;
+import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.components.Component;
 import com.opengg.core.world.components.physics.PhysicsComponent;
 import com.opengg.game.CharacterManager;
@@ -45,14 +46,14 @@ public class WorldAI extends Component {
 
         physics = new PhysicsComponent();
         physics.addCollider(new ColliderGroup(new AABB(3,3,3), new ConvexHull(List.of(
-                new Vector3f(-1,0,-0.2f),
-                new Vector3f(-1,0,0.2f),
-                new Vector3f(-1,1,-0.2f),
-                new Vector3f(-1,1,0.2f),
-                new Vector3f(1,0,-0.2f),
-                new Vector3f(1,0,0.2f),
-                new Vector3f(1,1,-0.2f),
-                new Vector3f(1,1,0.2f)
+                new Vector3f(-0.2f,0,-0.2f),
+                new Vector3f(-0.2f,0,0.2f),
+                new Vector3f(-0.2f,1,-0.2f),
+                new Vector3f(-0.2f,1,0.2f),
+                new Vector3f(0.2f,0,-0.2f),
+                new Vector3f(0.2f,0,0.2f),
+                new Vector3f(0.2f,1,-0.2f),
+                new Vector3f(0.2f,1,0.2f)
         ))));
         this.attach(physics);
     }
@@ -74,11 +75,16 @@ public class WorldAI extends Component {
     }
 
     public void setCharacterType(String character){
-        this.characterType = characterType;
+        this.characterType = character;
     }
 
     public HashMap<String, String> getSavedValues() {
         return savedValues;
+    }
+
+    public void checkAlive(){
+        if(!CharacterManager.getExisting(character).isLiving())
+            WorldEngine.markForRemoval(this);
     }
 
     @Override

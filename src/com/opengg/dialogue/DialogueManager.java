@@ -6,6 +6,8 @@ import com.opengg.core.io.FileStringLoader;
 import com.opengg.core.io.input.keyboard.KeyboardController;
 import com.opengg.core.io.input.keyboard.KeyboardListener;
 import com.opengg.core.math.Tuple;
+import com.opengg.core.util.ArrayUtil;
+import com.opengg.util.StringUtil;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -14,11 +16,10 @@ public class DialogueManager implements KeyboardListener {
     private static Map<String, DialogueNode> nodes = new HashMap<>();
     private static DialogueSequence current;
 
-    private final static Pattern commandPattern = Pattern.compile("\\{(.*?)}");
+    private final static Pattern commandPattern = Pattern.compile("\\{(.*?)}", Pattern.DOTALL|Pattern.MULTILINE);
     private final static Pattern nodePattern = Pattern.compile("\\[(.*?)]", Pattern.DOTALL|Pattern.MULTILINE);
 
     public static void initialize(){
-
         KeyboardController.addKeyboardListener(new DialogueManager());
         loadNodes("dialog.txt");
         GGConsole.log("Loaded " + nodes.size() + " dialogue nodes");
@@ -28,13 +29,7 @@ public class DialogueManager implements KeyboardListener {
         try {
             var data = FileStringLoader.loadStringSequence(Resource.getAbsoluteFromLocal("/resources/text/" + path));
 
-            var pattern = nodePattern.matcher(data);
-            while (pattern.find()){
-                var node = pattern.group(1);
-                data = pattern.replaceFirst("");
-                pattern = nodePattern.matcher(data);
-                parseSingleNode(node);
-            }
+            StringUtil.splitByPattern(data, nodePattern).forEach(DialogueManager::parseSingleNode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,10 +78,11 @@ public class DialogueManager implements KeyboardListener {
         }
 
 
-        var name = commands.get("name");
+        var name = commands.get("name").get(0);
 
+        //System.out.println(name);
         if(name == null) throw new RuntimeException("Failed to parse dialogue node, no name");
-        nodes.put(name.get(0), newNode);
+        nodes.put(name, newNode);
     }
 
     public static DialogueNode getNodeByName(String name){
@@ -102,7 +98,6 @@ public class DialogueManager implements KeyboardListener {
     public static void setCurrent(DialogueSequence current) {
         DialogueManager.current = current;
         if(current == null) return;
-        if(current.currentGUI == null) current.start();
     }
 
     @Override

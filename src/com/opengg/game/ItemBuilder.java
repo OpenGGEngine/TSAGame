@@ -1,12 +1,18 @@
 package com.opengg.game;
 
+import com.opengg.core.math.Tuple;
+
+import java.util.List;
+
 public class ItemBuilder {
     private String name;
     private String displayName;
     private String desc;
     private boolean usable;
     private boolean unique;
-    private int damage;
+    private boolean targeted;
+    private List<ItemEffect> effects;
+    private Item.ItemType type;
     private String sprite;
 
     public ItemBuilder setName(String name) {
@@ -29,6 +35,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setTargeted(boolean targeted) {
+        this.targeted = targeted;
+        return this;
+    }
+
     public ItemBuilder setUnique(boolean unique) {
         this.unique = unique;
         return this;
@@ -38,8 +49,8 @@ public class ItemBuilder {
         return unique;
     }
 
-    public ItemBuilder setDamage(int damage) {
-        this.damage = damage;
+    public ItemBuilder setEffects(List<ItemEffect> effects) {
+        this.effects = effects;
         return this;
     }
 
@@ -49,6 +60,25 @@ public class ItemBuilder {
     }
 
     public Item createItem() {
-        return new Item(name, displayName, desc, usable, unique, damage, sprite);
+        return new Item(name, displayName, desc, usable, unique, targeted, type, effects, sprite);
+    }
+
+    public Item.ItemType setType(Item.ItemType type) {
+        this.type = type;
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemBuilder{" +
+                "name='" + name + '\'' +
+                ", displayName='" + displayName + '\'' +
+                ", desc='" + desc + '\'' +
+                ", usable=" + usable +
+                ", unique=" + unique +
+                ", effects=" + effects +
+                ", type=" + type +
+                ", sprite='" + sprite + '\'' +
+                '}';
     }
 }

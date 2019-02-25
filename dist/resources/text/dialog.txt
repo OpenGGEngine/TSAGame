@@ -1,22 +1,33 @@
-[{name;bird}
+[
+{name;bird}
 The bird flew over the sky and got eaten by the big man pac
 This would result in its downfall cause he got naenaed
-{next;bird2} {sound;45acp.ogg;0.7} ]
+{next;bird2}
+{sound;45acp.ogg;0.7}
+]
 
-[{name;bird2}
+[
+{name;bird2}
 Afterwards pacman did a forward smash and killed abhi
 Its cause he didnt abuse lag
 wat do you do next
-{optionCount;2} {option0;bird3;Forward special} {anim;walk} {option1;bird4;Uair}]
 
-[{name;bird3}
+{optionCount;2}
+{option0;bird3;Forward special}
+{option1;bird4;Uair}
+{anim;walk}
+]
+
+[
+{name;bird3}
 You yeeted him
 Congrats you got a knife
 {item;knife;1}
 {quest;findSad;say}
 ]
 
-[{name;bird4}
+[
+{name;bird4}
 you missed cause pacs uair has like 0 horizontal range
 wait no thats his uptilt his uair is pretty good
 {item;water;1}

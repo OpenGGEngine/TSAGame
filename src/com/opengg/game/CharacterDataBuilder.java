@@ -1,11 +1,8 @@
 package com.opengg.game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CharacterDataBuilder {
     private String name;
-    private List<Attack> attacks = new ArrayList<>();
+    private Inventory inventory = new Inventory();
     private int maxHealth;
     private String displayName;
     private boolean hostile;
@@ -18,8 +15,12 @@ public class CharacterDataBuilder {
         return this;
     }
 
-    public CharacterDataBuilder setAttacks(List<Attack> attacks) {
-        this.attacks = attacks;
+    public String getName() {
+        return name;
+    }
+
+    public CharacterDataBuilder setInventory(Inventory inventory) {
+        this.inventory = inventory;
         return this;
     }
 
@@ -52,7 +53,20 @@ public class CharacterDataBuilder {
         return unique;
     }
 
-    public CharacterData createCharacterData() {
-        return new CharacterData(name, attacks, maxHealth, displayName, sprite, hostile);
+    public Character createCharacterData(String id) {
+        return new Character(name, inventory, maxHealth, displayName, sprite, hostile, id);
+    }
+
+    @Override
+    public String toString() {
+        return "CharacterDataBuilder{" +
+                "name='" + name + '\'' +
+                ", inventory=" + inventory +
+                ", maxHealth=" + maxHealth +
+                ", displayName='" + displayName + '\'' +
+                ", hostile=" + hostile +
+                ", sprite='" + sprite + '\'' +
+                ", unique=" + unique +
+                '}';
     }
 }

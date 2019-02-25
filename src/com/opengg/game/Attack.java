@@ -8,7 +8,4 @@ public class Attack {
     int damage;
     List<Tuple<String, Integer>> effects;
 
-    int range;
-
-    String type;
 }

@@ -1,0 +1,6 @@
+//values for status effects
+damageDisplay=Damage;
+damageValue=VAL health points;
+
+healDisplay=Healing;
+healValue=VAL health points;

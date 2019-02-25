@@ -22,10 +22,7 @@ import com.opengg.core.world.WorldLoader;
 import com.opengg.core.world.components.LightComponent;
 import com.opengg.core.world.components.ModelRenderComponent;
 import com.opengg.dialogue.DialogueManager;
-import com.opengg.game.BattleManager;
-import com.opengg.game.CharacterManager;
-import com.opengg.game.ItemManager;
-import com.opengg.game.QuestManager;
+import com.opengg.game.*;
 import com.opengg.gui.GameMenu;
 
 import static com.opengg.core.io.input.keyboard.Key.*;
@@ -50,6 +47,7 @@ public class TSAGame extends GGApplication {
         this.applicationName = "TSA Game";
         GGConsole.log("Initializing TSA Game submanagers");
 
+        StringManager.initialize();
         GameMenu.initialize();
         ItemManager.initialize();
         BehaviorManager.initialize();
@@ -117,7 +115,8 @@ public class TSAGame extends GGApplication {
         test.addSong(Resource.getSoundData("stardust.ogg"));
         test.play();
 
-        //Player.PLAYER.addItem("knife", 1);
+        Player.PLAYER.getInventory().addItem("knife", 1);
+        Player.PLAYER.getInventory().addItem("water", 1);
 
         QuestManager.beginQuest("findSad");
         QuestManager.beginQuest("getBand");

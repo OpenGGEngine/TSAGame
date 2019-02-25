@@ -4,10 +4,7 @@ import com.opengg.components.InteractableAI;
 import com.opengg.core.audio.Sound;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
-import com.opengg.core.gui.GUI;
-import com.opengg.core.gui.GUIController;
-import com.opengg.core.gui.GUIText;
-import com.opengg.core.gui.GUITexture;
+import com.opengg.core.gui.*;
 import com.opengg.core.io.input.keyboard.Key;
 import com.opengg.core.io.input.keyboard.KeyboardListener;
 import com.opengg.core.math.Vector2f;
@@ -25,20 +22,32 @@ public class DialogueSequence implements KeyboardListener {
 
     GUI currentGUI;
 
-    GUIText text;
+    GUITextBox text;
 
     String title;
 
     InteractableAI ai;
-
-    float counter = 0;
-    int textLength = 0;
 
     int pointer = 0;
 
     public DialogueSequence(InteractableAI ai){
         this.ai = ai;
         this.title = CharacterManager.getExisting(ai.getCharacter()).getDisplayName();
+
+        text = new GUITextBox(new Vector2f(0.1f, 0.0f), new Vector2f(0.8f,0.4f))
+                .setText("")
+                .setBackground(Texture.ofColor(Color.BLACK, 0.5f))
+                .setSpeed(1/60f)
+                .setTextSize(0.12f)
+                .setMargin(0.04f)
+                .setScrollMode(GUITextBox.ScrollMode.SPEEDABLE_SCROLL)
+                .setFont(Resource.getTruetypeFont("consolas.ttf"));
+
+        currentGUI = new GUI();
+        currentGUI.addItem("text", text);
+
+        text.setLayer(0.5f);
+
         this.enableNode(ai.getDialogue());
         if(ai.getDialogue() == null) throw new RuntimeException("Failed to find dialog named " + ai.getDialogue());
     }
@@ -46,11 +55,6 @@ public class DialogueSequence implements KeyboardListener {
     public void start(){
         WorldEngine.getCurrent().find("player").setEnabled(false);
 
-        currentGUI = new GUI();
-        currentGUI.addItem("text", text = new GUIText(Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.12f, 0.36f)));
-        currentGUI.addItem("background",
-                new GUITexture(Texture.ofColor(Color.BLACK, 0.5f), new Vector2f(0.1f,0), new Vector2f(0.8f,0.4f)));
-        text.setLayer(0.5f);
         GUIController.addAndUse(currentGUI, "dialogue");
         DialogueManager.setCurrent(this);
 
@@ -58,26 +62,21 @@ public class DialogueSequence implements KeyboardListener {
     }
 
     public void update(float delta){
-        counter += delta;
-        if(counter > (1/50f)){
-            counter = 0;
-            if(textLength < current.text.length())
-                textLength += 1;
+        text.setText(getText(current));
+    }
 
-            var printedString = title + ":\n\n" + current.text.substring(0, textLength);
-            if(textLength == current.text.length()){
-                printedString += "\n";
-                for(int i = 0; i < current.options.size(); i++){
-                    var data = current.options.get(i);
-                    if(i == pointer)
-                        printedString += "\n\n -> " + data.x;
-                    else
-                        printedString += "\n\n -  " + data.x;
-                }
+    public String getText(DialogueNode node){
+        var printedString = title + ":\n\n" + node.text;
+            printedString += "\n";
+            for(int i = 0; i < node.options.size(); i++){
+                var data = node.options.get(i);
+                if(i == pointer)
+                    printedString += "\n\n -> " + data.x;
+                else
+                    printedString += "\n\n -  " + data.x;
             }
-            text.setText(Text.from(printedString).size(0.12f).maxLineSize(1f).kerning(true)
-                    .hasNewline(true));
-        }
+
+        return printedString;
     }
 
     public void end(){
@@ -90,9 +89,11 @@ public class DialogueSequence implements KeyboardListener {
 
     public void enableNode(String next){
         current = DialogueManager.getNodeByName(next);
-        textLength = 0;
-        counter = 0;
+
         pointer = 0;
+
+        text.reset();
+        text.setText(getText(current));
 
         if(current.sound != null){
             var sound = new Sound(current.sound);
@@ -101,7 +102,7 @@ public class DialogueSequence implements KeyboardListener {
         }
 
         if(current.itemAmount != 0){
-            Player.PLAYER.addItem(current.itemSpawn, current.itemAmount);
+            Player.PLAYER.getInventory().addItem(current.itemSpawn, current.itemAmount);
         }
 
         if(!current.quest.equals("")){
@@ -118,8 +119,8 @@ public class DialogueSequence implements KeyboardListener {
     @Override
     public void keyPressed(int key) {
         if(key == Key.KEY_SPACE){
-            if(textLength != current.text.length()){
-                textLength = current.text.length();
+            if(!text.isComplete()){
+                text.forceComplete();
             }else if(!current.hasOpts){
                 if(!current.next.isEmpty()){
                     enableNode(current.next);
@@ -132,13 +133,13 @@ public class DialogueSequence implements KeyboardListener {
             }
         }else if(key == Key.KEY_DOWN){
             if(current.hasOpts)
-                if(textLength == current.text.length())
+                if(text.isComplete())
                     if(pointer < current.options.size()-1)
                         pointer++;
 
         }else if(key == Key.KEY_UP){
             if(current.hasOpts)
-                if(textLength == current.text.length()){
+                if(text.isComplete()){
                     if(pointer > 0)
                         pointer--;
             }

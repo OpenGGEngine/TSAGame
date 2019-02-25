@@ -6,7 +6,6 @@ import com.opengg.core.math.Vector2f;
 import com.opengg.core.physics.collision.AABB;
 import com.opengg.core.render.drawn.TexturedDrawnObject;
 import com.opengg.core.render.objects.ObjectCreator;
-import com.opengg.core.render.texture.Texture;
 import com.opengg.core.util.GGInputStream;
 import com.opengg.core.util.GGOutputStream;
 import com.opengg.core.world.WorldEngine;
@@ -14,6 +13,7 @@ import com.opengg.core.world.components.Component;
 import com.opengg.core.world.components.RenderComponent;
 import com.opengg.core.world.components.Zone;
 import com.opengg.core.world.components.triggers.TriggerInfo;
+import com.opengg.game.Item;
 import com.opengg.game.ItemManager;
 import com.opengg.game.Player;
 
@@ -47,7 +47,11 @@ public class WorldItem extends Component {
     public void activate(TriggerInfo  i){
         if(!(i.data instanceof PlayerWorldComponent)) return;
         if(autoGet){
-            Player.PLAYER.addItem(itemId, amount);
+            if(ItemManager.generate(itemId).type == Item.ItemType.ABILITY)
+                Player.PLAYER.getInventory().addAbility(itemId);
+            else
+                Player.PLAYER.getInventory().addItem(itemId, amount);
+
             OpenGG.asyncExec(() -> WorldEngine.markForRemoval(this));
         }
     }
