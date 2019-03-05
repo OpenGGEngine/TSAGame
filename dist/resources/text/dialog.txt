@@ -2,8 +2,13 @@
 {name;bird}
 The bird flew over the sky and got eaten by the big man pac
 This would result in its downfall cause he got naenaed
-{next;bird2}
+{next;bird2;cantgo;findSad;ask}
 {sound;45acp.ogg;0.7}
+]
+
+[
+{name;cantgo}
+You literally cant do that rn
 ]
 
 [

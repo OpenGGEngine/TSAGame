@@ -28,6 +28,10 @@ public class DialogueNode {
     String quest = "";
     String questState = "";
 
+    String requirementQuest = "";
+    String requirementQuestState = "";
+    String failOpt;
+
     @Override
     public String toString() {
         return "DialogueNode{" +

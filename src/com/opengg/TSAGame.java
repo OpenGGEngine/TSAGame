@@ -1,7 +1,7 @@
 package com.opengg;
 
 import com.opengg.components.*;
-import com.opengg.core.audio.AudioController;
+import com.opengg.core.audio.SoundEngine;
 import com.opengg.core.audio.Soundtrack;
 import com.opengg.core.console.GGConsole;
 import com.opengg.core.engine.BindController;
@@ -79,7 +79,7 @@ public class TSAGame extends GGApplication {
         WorldEngine.getCurrent().attach(new ModelRenderComponent(Resource.getModel("defaults/hemi.bmf")));
         WorldEngine.getCurrent().attach(new LightComponent(
                 Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1), 1000, 512, 512 )));
-        WorldEngine.getCurrent().attach(new WorldEnemy().setPositionOffset(new Vector3f(0,0,-10)));
+        //WorldEngine.getCurrent().attach(new WorldEnemy().setPositionOffset(new Vector3f(0,0,-10)));
         WorldEngine.getCurrent().attach(new InteractableAI(CharacterManager.generate("bobomb")).setPositionOffset(-8,0,-5));
         WorldEngine.getCurrent().attach(new WorldItem("emak", 2).setPositionOffset(new Vector3f(0,0,4)));
         WorldEngine.getCurrent().attach(new TSAWorldChangeZone("world2", "entry1").setPositionOffset(new Vector3f(10,0,0)));
@@ -122,7 +122,7 @@ public class TSAGame extends GGApplication {
         QuestManager.beginQuest("getBand");
 
 
-        AudioController.setGlobalGain(0.0f);
+        SoundEngine.setGlobalGain(0.0f);
     }
 
     @Override

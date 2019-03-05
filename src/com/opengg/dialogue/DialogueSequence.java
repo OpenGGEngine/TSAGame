@@ -13,6 +13,7 @@ import com.opengg.core.render.texture.Texture;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.game.CharacterManager;
 import com.opengg.game.Player;
+import com.opengg.game.Quest;
 import com.opengg.game.QuestManager;
 
 import java.awt.*;
@@ -116,20 +117,34 @@ public class DialogueSequence implements KeyboardListener {
         ai.setDialogueAnimation(current.anim);
     }
 
+    public void getNext(){
+         if(!current.hasOpts){
+            if(!current.next.isEmpty()){
+                if(!current.requirementQuest.isEmpty()){
+                    if(QuestManager.getQuests().get(current.requirementQuest).subQuests.get(current.requirementQuestState).state == Quest.QuestState.DONE){
+                        enableNode(current.next);
+                    }else {
+                        enableNode(current.failOpt);
+                    }
+                }else {
+                    enableNode(current.next);
+                }
+            }else{
+                OpenGG.asyncExec(this::end);
+            }
+        }else{
+            var next = current.options.get(pointer).y;
+            enableNode(next);
+        }
+    }
+
     @Override
     public void keyPressed(int key) {
         if(key == Key.KEY_SPACE){
             if(!text.isComplete()){
                 text.forceComplete();
-            }else if(!current.hasOpts){
-                if(!current.next.isEmpty()){
-                    enableNode(current.next);
-                }else{
-                    OpenGG.asyncExec(this::end);
-                }
-            }else{
-                var next = current.options.get(pointer).y;
-                enableNode(next);
+            }else {
+                getNext();
             }
         }else if(key == Key.KEY_DOWN){
             if(current.hasOpts)
