@@ -58,6 +58,9 @@ public class GameMenu {
         inventoryMenu = new GUIGroup(new Vector2f(0,0));
         inventoryMenu.addItem("title",
                 new GUIText(Text.from("Inventory").size(0.14f).center(true), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.18f,0.45f)));
+        inventoryMenu.addItem("gold",
+                new GUIText(Text.from(Player.PLAYER.getMoney() + " gold").size(0.14f).center(true),
+                        Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.01f,0.01f)));
         inventoryMenu.addItem("holder", new GUIGroup(new Vector2f(0,0)));
 
         questMenu = new GUIGroup(new Vector2f(0,0));
@@ -97,6 +100,8 @@ public class GameMenu {
             playerMenu.setEnabled(false);
 
             int i = 0;
+
+            ((GUIText)inventoryMenu.getItem("gold")).setText(Text.from(Player.PLAYER.getMoney() + " gold").size(0.1f));
 
             var holder = (GUIGroup) inventoryMenu.getItem("holder");
 

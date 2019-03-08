@@ -2,8 +2,11 @@ package com.opengg.components;
 
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector2f;
+import com.opengg.core.util.GGInputStream;
+import com.opengg.core.util.GGOutputStream;
 import com.opengg.core.world.WorldEngine;
 
+import java.io.IOException;
 import java.util.List;
 
 public class InteractableAI extends WorldAI {
@@ -19,8 +22,6 @@ public class InteractableAI extends WorldAI {
 
     public InteractableAI(String character) {
         super(character);
-        args = List.of("0,8", "5,15");
-        behavior = "patrol";
     }
 
     public String getDialogue() {
@@ -58,5 +59,19 @@ public class InteractableAI extends WorldAI {
 
             sprite.setAnimToUse(dialogueAnimation);
         }
+    }
+
+    @Override
+    public void serialize(GGOutputStream out) throws IOException {
+        super.serialize(out);
+
+        out.write(dialogue);
+    }
+
+    @Override
+    public void deserialize(GGInputStream in) throws IOException{
+        super.deserialize(in);
+
+        dialogue = in.readString();
     }
 }

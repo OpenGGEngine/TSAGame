@@ -1,6 +1,6 @@
 package com.opengg.components;
 
-import com.opengg.BehaviorManager;
+import com.opengg.game.BehaviorManager;
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.physics.collision.AABB;
@@ -32,17 +32,19 @@ public class WorldAI extends Component {
     float speed = 2;
 
     public WorldAI() {
+        this.setUpdateDistance(50);
 
     }
 
     public WorldAI(String character){
+        this();
         this.character = character;
         sprite = new SpriteRenderComponent(CharacterManager.getExisting(character).getSprite());
         this.attach(sprite);
+        this.setName(character);
 
         characterType = CharacterManager.getExisting(character).getName();
 
-        this.setUpdateDistance(50);
 
         physics = new PhysicsComponent();
         physics.addCollider(new ColliderGroup(new AABB(3,3,3), new ConvexHull(List.of(
@@ -70,6 +72,14 @@ public class WorldAI extends Component {
         this.behavior = behavior;
     }
 
+    public String getBehavior() {
+        return behavior;
+    }
+
+    public String getArgs(){
+        return String.join(";", args);
+    }
+
     public void setArgs(List<String> args) {
         this.args = args;
     }
@@ -78,13 +88,21 @@ public class WorldAI extends Component {
         this.characterType = character;
     }
 
+    public String getCharacterType() {
+        return characterType;
+    }
+
     public HashMap<String, String> getSavedValues() {
         return savedValues;
     }
 
     public void checkAlive(){
-        if(!CharacterManager.getExisting(character).isLiving())
+        if(!isLiving())
             WorldEngine.markForRemoval(this);
+    }
+
+    public boolean isLiving(){
+        return CharacterManager.getExisting(character).isLiving();
     }
 
     @Override
@@ -126,5 +144,12 @@ public class WorldAI extends Component {
         characterType = in.readString();
         character = CharacterManager.generate(characterType);
         speed = in.readFloat();
+    }
+
+    @Override
+    public void onWorldLoad(){
+        physics = (PhysicsComponent) this.getChildren().stream().filter(c -> c instanceof PhysicsComponent).findAny().get();
+        sprite = (SpriteRenderComponent) this.getChildren().stream().filter(c -> c instanceof SpriteRenderComponent).findAny().get();
+
     }
 }

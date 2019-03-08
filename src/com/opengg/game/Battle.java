@@ -14,6 +14,7 @@ import com.opengg.core.world.WorldEngine;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Battle {
@@ -215,7 +216,7 @@ public class Battle {
         var target = ArrayUtil.getRandom(ally ? info.enemies : info.allies);
         var inventory = CharacterManager.getExisting(character).getInventory();
 
-        var items = (HashMap<String, Integer>) inventory.items.clone();
+        var items = (HashMap<String, Integer>) ((HashMap<String, Integer>) inventory.items).clone();
 
         items.putAll(
                 inventory.abilities.stream()
@@ -244,10 +245,6 @@ public class Battle {
     public void attack(Character source, Character enemy, Item attack){
         var targeted = attack.targeted;
 
-        System.out.println(source.getName());
-        System.out.println(enemy.getName());
-        System.out.println(attack.name);
-
         for(var effect : attack.effects){
             switch (effect.name){
                 case "damage":
@@ -264,7 +261,6 @@ public class Battle {
                     break;
             }
         }
-        System.out.println("");
 
         if(selectedItem.type == Item.ItemType.ITEM){
             source.getInventory().addItem(selectedItem.name, -1);
@@ -277,11 +273,8 @@ public class Battle {
     }
 
     private void damage(Character target, float amount){
-        System.out.println(target.getName());
-        System.out.println(amount);
-        System.out.println(target.getHealth());
+
         target.setHealth(target.getHealth() - amount);
-        System.out.println(target.getHealth());
         if(target.getHealth() <= 0){
             target.setLiving(false);
             if(info.enemies.contains(target.getId())){
@@ -304,7 +297,6 @@ public class Battle {
         if(!success){
             System.out.println("YOU DIED");
         }
-
         BattleManager.end();
     }
 

@@ -84,7 +84,7 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
                     if(physics.getEntity().grounded) physics.getEntity().velocity = physics.getEntity().velocity.setY(5);
                     break;
                 case "interact":
-                    for(var component : getWorld().getAll()){
+                    for(var component : getWorld().getAllDescendants()){
                         if(component instanceof InteractableAI) {
                             var ai = (InteractableAI) component;
                             if (ai.allowInteraction()) {

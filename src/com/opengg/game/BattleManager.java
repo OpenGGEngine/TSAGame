@@ -24,7 +24,7 @@ public class BattleManager {
 
     public static void end(){
         WorldEngine.useWorld(last);
-        WorldEngine.getCurrent().getAll().stream()
+        WorldEngine.getCurrent().getAllDescendants().stream()
                 .filter(s -> s instanceof WorldAI)
                 .map(s -> (WorldAI)s)
                 .forEach(WorldAI::checkAlive);

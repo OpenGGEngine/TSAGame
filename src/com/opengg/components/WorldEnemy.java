@@ -9,9 +9,15 @@ import java.util.List;
 
 public class WorldEnemy extends WorldAI {
     public WorldEnemy(){
-        super(CharacterManager.generate("bobomb"));
+        //super(CharacterManager.generate("bobomb"));
         args = List.of("0,0", "10,0");
         behavior = "patrol";
+    }
+
+    public WorldEnemy(String character){
+        super(character);
+        args = List.of("5");
+        behavior = "chase";
     }
 
     @Override

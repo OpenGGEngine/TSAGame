@@ -39,6 +39,21 @@
 ]
 
 [
+    name=gold;
+    displayName=Gold;
+    desc=Used for trading;
+
+    unique=false;
+    usable=false;
+
+    type=item;
+
+    targeted=false;
+
+    sprite=items/emak.png;
+]
+
+[
     name=water;
     displayName=Water;
     desc=We dont have much in the mill;

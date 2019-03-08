@@ -15,14 +15,14 @@ public class TSAWorldChangeZoneViewModel extends ViewModel<TSAWorldChangeZone> {
                     .name("Target entry zone")
                     .type(Element.Type.STRING)
                     .value("")
-                    .autoUpdate(false));
+                    .autoUpdate(true));
 
         addElement(new Element()
                 .internalName("world")
                 .name("Target world")
                 .type(Element.Type.STRING)
                 .value("")
-                .autoUpdate(false));
+                .autoUpdate(true));
     }
 
     @Override

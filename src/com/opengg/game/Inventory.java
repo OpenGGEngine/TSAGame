@@ -2,17 +2,26 @@ package com.opengg.game;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class Inventory {
-    HashMap<String, Integer> items = new HashMap<>();
-    HashSet<String> abilities = new HashSet<>();
+    Map<String, Integer> items = new HashMap<>();
+    Set<String> abilities = new HashSet<>();
 
+    public Inventory(){
 
-    public HashMap<String, Integer> getItems() {
+    }
+
+    public Inventory(Map<String, Integer> items){
+        this.items.putAll(items);
+    }
+
+    public Map<String, Integer> getItems() {
         return items;
     }
 
-    public HashSet<String> getAbilities() {
+    public Set<String> getAbilities() {
         return abilities;
     }
 
