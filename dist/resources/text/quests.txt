@@ -1,4 +1,31 @@
 [
+    name=goToBeeville;
+    displayName=Go to GETNAMELATER;
+
+    firstState=talkToBee;
+
+    {
+        name=talkToBee;
+        displayName=Talk to worker bee about your situation
+    }
+
+    {
+        name=followToEnemy;
+        displayName=Follow worker bee to BEEVILLENAME;
+
+        requirements=talkToBee;
+    }
+
+    {
+        name=fightFirstEnemy;
+        displayName=Defeat the <probably beaver> blocking your path;
+
+        requirements=followToEnemy;
+    }
+]
+
+
+[
     name=findSad;
     displayName=Find Bob-omb;
 

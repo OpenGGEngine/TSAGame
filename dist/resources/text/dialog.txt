@@ -1,4 +1,22 @@
 [
+{name;introBee}
+TODO
+]
+
+
+
+
+
+
+
+
+
+
+
+
+
+//ALL OF THESE ARE TEST
+[
 {name;bird}
 The bird flew over the sky and got eaten by the big man pac
 This would result in its downfall cause he got naenaed
@@ -6,13 +24,22 @@ This would result in its downfall cause he got naenaed
 {sound;45acp.ogg;0.7}
 ]
 
+if(findSad.ask.isComplete()){
+	bird2();
+}else{
+	cantgo();
+}
+
 [
 {name;cantgo}
 You literally cant do that rn
 ]
 
+///SCENE 1 STARTS HERE
+
 [
 {name;bird2}
+
 Afterwards pacman did a forward smash and killed abhi
 Its cause he didnt abuse lag
 wat do you do next
@@ -27,7 +54,7 @@ wat do you do next
 {name;bird3}
 You yeeted him
 Congrats you got a knife
-{item;knife;1}
+{item;knife;10}
 {quest;findSad;say}
 ]
 

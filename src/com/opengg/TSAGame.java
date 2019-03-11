@@ -9,7 +9,10 @@ import com.opengg.core.engine.GGApplication;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.io.ControlType;
+import com.opengg.core.math.Quaternionf;
 import com.opengg.core.math.Vector3f;
+import com.opengg.core.render.RenderEngine;
+import com.opengg.core.render.light.Light;
 import com.opengg.core.render.shader.ShaderController;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.render.window.WindowController;
@@ -17,6 +20,7 @@ import com.opengg.core.render.window.WindowInfo;
 import com.opengg.core.world.Skybox;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
+import com.opengg.core.world.components.LightComponent;
 import com.opengg.dialogue.DialogueManager;
 import com.opengg.game.*;
 import com.opengg.gui.GameMenu;
@@ -72,25 +76,15 @@ public class TSAGame extends GGApplication {
         BindController.addBind(ControlType.KEYBOARD, "up", KEY_SPACE);
         BindController.addBind(ControlType.KEYBOARD, "interact", KEY_ENTER);
 
-        WorldEngine.useWorld(WorldLoader.loadWorld(Resource.getAbsoluteFromLocal("test.bwf")));
+        WorldEngine.useWorld(WorldLoader.loadWorld(Resource.getAbsoluteFromLocal("temp_beeforest.bwf")));
 
-        WorldEngine.getCurrent().attach(new PlayerWorldComponent().setPositionOffset(new Vector3f(10,0,10)));
-        /*WorldEngine.getCurrent().attach(new ModelRenderComponent(Resource.getModel("defaults/hemi.bmf")));
-        WorldEngine.getCurrent().attach(new LightComponent(
-                Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1), 1000, 512, 512 )));
-        WorldEngine.getCurrent().attach(new EnemySpawner("bobomb", 5).setPositionOffset(new Vector3f(10,0,-10)));
-        WorldEngine.getCurrent().attach(new InteractableAI(CharacterManager.generate("bobomb")).setPositionOffset(-8,0,-5));
-        WorldEngine.getCurrent().attach(new WorldItem("emak", 2).setPositionOffset(new Vector3f(0,0,4)));
-        WorldEngine.getCurrent().attach(new TSAWorldChangeZone("world2", "entry1").setPositionOffset(new Vector3f(10,0,0)));*/
-        /*WorldLoader.keepWorld(WorldEngine.getCurrent());
+        WorldEngine.getCurrent().attach(new LightComponent(Light.createDirectional(new Quaternionf(new Vector3f(0,0,-80)), new Vector3f(1,1,200f/255f))));
 
-        World world2 = new World("world2");
-        world2.attach(new WorldEntryZone().setPositionOffset(new Vector3f(10,0,10)).setName("entry1"));
-        world2.attach(new ModelRenderComponent(Resource.getModel("defaults/torus.bmf")));
-        world2.attach(new LightComponent(
-                Light.createPointShadow(new Vector3f(0,-10,0), new Vector3f(1,0,0), 1000, 512, 512 )));
-
-        WorldLoader.keepWorld(world2);*/
+        WorldEngine.getCurrent().attach(new PlayerWorldComponent().setPositionOffset(new Vector3f(WorldEngine.getCurrent().getAllDescendants().stream()
+                                                                                                                            .filter(c -> c instanceof WorldEntryZone)
+                                                                                                                            .filter(c -> c.getName().equals("spawn"))
+                                                                                                                            .map(c -> c.getPosition())
+                                                                                                                            .findAny().orElse(new Vector3f(10,0,10)))));
 
         WorldEngine.getCurrent().getRenderEnvironment().setSkybox(new Skybox(Texture.getSRGBCubemap(
                 Resource.getTexturePath("skybox\\majestic_ft.png"),
@@ -113,13 +107,6 @@ public class TSAGame extends GGApplication {
         Soundtrack test = new Soundtrack();
         test.addSong(Resource.getSoundData("stardust.ogg"));
         test.play();
-
-        Player.PLAYER.getInventory().addItem("knife", 1);
-        Player.PLAYER.getInventory().addItem("water", 1);
-
-        QuestManager.beginQuest("findSad");
-        QuestManager.beginQuest("getBand");
-
 
         SoundEngine.setGlobalGain(0.0f);
     }

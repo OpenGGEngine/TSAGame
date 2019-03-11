@@ -12,7 +12,7 @@ public class Player extends Character {
     List<String> partners = new ArrayList<>();
 
     public Player(){
-        super("player", new Inventory(Map.of("gold", 100)), 100, "Player", Configuration.get("playerSprite"), false, "player0");
+        super("player", new Inventory(Map.of("gold", 100)), 100, "Player", Configuration.get("playerSprite"), false, "player0", 1);
     }
 
     public int getMoney(){

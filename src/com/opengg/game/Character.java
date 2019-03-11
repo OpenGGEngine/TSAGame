@@ -18,9 +18,11 @@ public class Character {
 
     private boolean hostile;
 
+    private float size;
+
     private boolean living = true;
 
-    public Character(String name, Inventory inventory, int maxHealth, String displayName, String sprite, boolean hostile, String id) {
+    public Character(String name, Inventory inventory, int maxHealth, String displayName, String sprite, boolean hostile, String id, float size) {
         this.name = name;
         this.inventory = inventory;
         this.health = maxHealth;
@@ -29,6 +31,7 @@ public class Character {
         this.hostile = hostile;
         this.sprite = sprite;
         this.id = id;
+        this.size = size;
     }
 
     public String getName() {
@@ -69,6 +72,10 @@ public class Character {
 
     public void setHostile(boolean hostile) {
         this.hostile = hostile;
+    }
+
+    public float getSize() {
+        return size;
     }
 
     public boolean isLiving() {

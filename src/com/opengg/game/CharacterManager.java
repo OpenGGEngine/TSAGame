@@ -44,6 +44,7 @@ public class CharacterManager {
         builder.setName(sections.get("name"));
         builder.setDisplayName(sections.get("displayName"));
         builder.setSprite(sections.get("sprite"));
+        builder.setSize(Float.parseFloat(sections.get("size")));
         builder.setHostile(Boolean.parseBoolean(sections.getOrDefault("hostile", "false")));
         builder.setMaxHealth(
                 Integer.parseInt(

@@ -8,8 +8,25 @@
 
     sprite=test;
 
+    size=5.0;
+
     {
         item=knife;
         amount=5;
     }
+]
+
+
+[
+    name=workerbee;
+    displayName=Worker Bee;
+
+    health=50;
+
+    hostile=false;
+
+    sprite=bee1;
+
+    size=1.0;
+
 ]

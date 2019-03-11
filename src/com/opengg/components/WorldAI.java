@@ -41,23 +41,27 @@ public class WorldAI extends Component {
         this.character = character;
         sprite = new SpriteRenderComponent(CharacterManager.getExisting(character).getSprite());
         this.attach(sprite);
-        this.setName(character);
 
         characterType = CharacterManager.getExisting(character).getName();
 
+        var size = CharacterManager.getExisting(character).getSize();
+        sprite.setScaleOffset(size);
 
         physics = new PhysicsComponent();
         physics.addCollider(new ColliderGroup(new AABB(3,3,3), new ConvexHull(List.of(
-                new Vector3f(-0.2f,0,-0.2f),
-                new Vector3f(-0.2f,0,0.2f),
-                new Vector3f(-0.2f,1,-0.2f),
-                new Vector3f(-0.2f,1,0.2f),
-                new Vector3f(0.2f,0,-0.2f),
-                new Vector3f(0.2f,0,0.2f),
-                new Vector3f(0.2f,1,-0.2f),
-                new Vector3f(0.2f,1,0.2f)
+                new Vector3f(0f,0,-0.2f).multiply(size),
+                new Vector3f(0f,0,0.2f).multiply(size),
+                new Vector3f(0f,1,-0.2f).multiply(size),
+                new Vector3f(0f,1,0.2f).multiply(size),
+                new Vector3f(1f,0,-0.2f).multiply(size),
+                new Vector3f(1f,0,0.2f).multiply(size),
+                new Vector3f(1f,1,-0.2f).multiply(size),
+                new Vector3f(1f,1,0.2f).multiply(size)
         ))));
         this.attach(physics);
+
+        this.setName(character);
+
     }
 
     public float getSpeed() {

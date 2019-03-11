@@ -4,6 +4,7 @@ import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.math.Tuple;
 import com.opengg.core.math.Vector2f;
+import com.opengg.core.render.RenderEngine;
 import com.opengg.core.render.objects.ObjectCreator;
 import com.opengg.core.render.shader.ShaderController;
 import com.opengg.core.util.GGInputStream;
@@ -73,7 +74,7 @@ public class SpriteRenderComponent extends RenderComponent {
     }
 
     public SpriteRenderComponent(){
-        this.setDrawable(ObjectCreator.createSquare(new Vector2f(-1,-1), new Vector2f(1,1), 0));
+        this.setDrawable(ObjectCreator.createSquare(new Vector2f(0,0), new Vector2f(1,1), 0));
         this.setShader("texanim");
     }
 
@@ -134,6 +135,7 @@ public class SpriteRenderComponent extends RenderComponent {
     @Override
     public void deserialize(GGInputStream in) throws IOException{
         super.deserialize(in);
+        this.setDrawable(ObjectCreator.createSquare(new Vector2f(0,0), new Vector2f(1,1), 0));
         var chara = in.readString();
         setCharacter(chara);
     }

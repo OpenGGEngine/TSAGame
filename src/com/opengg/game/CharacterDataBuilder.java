@@ -9,6 +9,7 @@ public class CharacterDataBuilder {
     private String sprite;
 
     private boolean unique;
+    private float size;
 
     public CharacterDataBuilder setName(String name) {
         this.name = name;
@@ -49,12 +50,17 @@ public class CharacterDataBuilder {
         return this;
     }
 
+    public CharacterDataBuilder setSize(float size){
+        this.size = size;
+        return this;
+    }
+
     public boolean isUnique() {
         return unique;
     }
 
     public Character createCharacterData(String id) {
-        return new Character(name, inventory, maxHealth, displayName, sprite, hostile, id);
+        return new Character(name, inventory, maxHealth, displayName, sprite, hostile, id, size);
     }
 
     @Override
