@@ -7,6 +7,7 @@ import com.opengg.core.physics.collision.AABB;
 import com.opengg.core.physics.collision.ColliderGroup;
 import com.opengg.core.physics.collision.ConvexHull;
 import com.opengg.core.render.objects.ObjectCreator;
+import com.opengg.core.render.shader.ShaderController;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.render.texture.TextureData;
 import com.opengg.core.render.texture.TextureManager;
@@ -59,6 +60,7 @@ public class FloorComponent extends RenderComponent {
     public void render(){
         blotmap.use(1);
         array.use(11);
+        ShaderController.setUniform("scale", this.getScale());
         super.render();
     }
 

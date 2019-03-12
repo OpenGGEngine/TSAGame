@@ -3,11 +3,12 @@
 @include stdfrag.ggsl
 
 uniform sampler2DArray terrain;
+uniform vec3 scale;
 
 void main() {
 	vec4 blendMapColor = getTex(Ka);
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.b +blendMapColor.g);
-    vec2 tiledMapEditor = textureCoord * 40;
+    vec2 tiledMapEditor = vec2(textureCoord.x * scale.x, textureCoord.y * scale.z) * 40;
 
     vec4 wcolor = texture(terrain, vec3(tiledMapEditor,0)) * backTextureAmount;
     vec4 wcolorr = texture(terrain, vec3(tiledMapEditor,1)) * blendMapColor.r;

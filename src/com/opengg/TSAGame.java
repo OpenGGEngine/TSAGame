@@ -20,6 +20,7 @@ import com.opengg.core.render.window.WindowInfo;
 import com.opengg.core.world.Skybox;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
+import com.opengg.core.world.components.Component;
 import com.opengg.core.world.components.LightComponent;
 import com.opengg.dialogue.DialogueManager;
 import com.opengg.game.*;
@@ -76,14 +77,12 @@ public class TSAGame extends GGApplication {
         BindController.addBind(ControlType.KEYBOARD, "up", KEY_SPACE);
         BindController.addBind(ControlType.KEYBOARD, "interact", KEY_ENTER);
 
-        WorldEngine.useWorld(WorldLoader.loadWorld(Resource.getAbsoluteFromLocal("temp_beeforest.bwf")));
-
         WorldEngine.getCurrent().attach(new LightComponent(Light.createDirectional(new Quaternionf(new Vector3f(0,0,-80)), new Vector3f(1,1,200f/255f))));
 
         WorldEngine.getCurrent().attach(new PlayerWorldComponent().setPositionOffset(new Vector3f(WorldEngine.getCurrent().getAllDescendants().stream()
                                                                                                                             .filter(c -> c instanceof WorldEntryZone)
                                                                                                                             .filter(c -> c.getName().equals("spawn"))
-                                                                                                                            .map(c -> c.getPosition())
+                                                                                                                            .map(Component::getPosition)
                                                                                                                             .findAny().orElse(new Vector3f(10,0,10)))));
 
         WorldEngine.getCurrent().getRenderEnvironment().setSkybox(new Skybox(Texture.getSRGBCubemap(
