@@ -22,6 +22,7 @@ import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
 import com.opengg.core.world.components.Component;
 import com.opengg.core.world.components.LightComponent;
+import com.opengg.core.world.components.ModelComponent;
 import com.opengg.dialogue.DialogueManager;
 import com.opengg.game.*;
 import com.opengg.gui.GameMenu;
@@ -77,13 +78,19 @@ public class TSAGame extends GGApplication {
         BindController.addBind(ControlType.KEYBOARD, "up", KEY_SPACE);
         BindController.addBind(ControlType.KEYBOARD, "interact", KEY_ENTER);
 
-        WorldEngine.getCurrent().attach(new LightComponent(Light.createDirectional(new Quaternionf(new Vector3f(0,0,-80)), new Vector3f(1,1,200f/255f))));
+       try {
+           WorldEngine.useWorld(WorldLoader.loadWorld("flowerforest.bwf"));
+       }catch(NullPointerException e){
+           GGConsole.error("Failed to find world!");
+       }
+
+       // WorldEngine.getCurrent().attach(new LightComponent(Light.createDirectional(new Quaternionf(new Vector3f(0,0,-80)), new Vector3f(1,1,200f/255f))));
 
         WorldEngine.getCurrent().attach(new PlayerWorldComponent().setPositionOffset(new Vector3f(WorldEngine.getCurrent().getAllDescendants().stream()
                                                                                                                             .filter(c -> c instanceof WorldEntryZone)
                                                                                                                             .filter(c -> c.getName().equals("spawn"))
                                                                                                                             .map(Component::getPosition)
-                                                                                                                            .findAny().orElse(new Vector3f(10,0,10)))));
+                                                                                                                            .findAny().orElse(new Vector3f(0,0,0))                                                                                                                            )));
 
         WorldEngine.getCurrent().getRenderEnvironment().setSkybox(new Skybox(Texture.getSRGBCubemap(
                 Resource.getTexturePath("skybox\\majestic_ft.png"),

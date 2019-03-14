@@ -2,7 +2,7 @@
 @include phong.ggsl
 @include stdfrag.ggsl
 
-in vertexData{
+in tangentData{
     vec3 tan;
 };
 

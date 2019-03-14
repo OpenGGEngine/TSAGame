@@ -16,6 +16,7 @@ import com.opengg.core.world.components.ControlledComponent;
 import com.opengg.core.world.components.physics.PhysicsComponent;
 import com.opengg.dialogue.DialogueManager;
 import com.opengg.dialogue.DialogueSequence;
+import com.opengg.game.Player;
 
 import java.util.List;
 
@@ -23,27 +24,31 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
     SpriteRenderComponent sprite;
     PhysicsComponent physics;
     private Vector3fm control = new Vector3fm();
-    float speed = 2;
+    float speed = 4;
 
     public PlayerWorldComponent(){
+        var size = Player.PLAYER.getSize();
+
         sprite = new SpriteRenderComponent(Configuration.get("playerSprite"));
+        sprite.setScaleOffset(size);
         this.attach(sprite);
+
 
         physics = new PhysicsComponent();
         physics.addCollider(new ColliderGroup(new AABB(3,3,3), new ConvexHull(List.of(
-                new Vector3f(0f,0,-0.2f),
-                new Vector3f(0f,0,0.2f),
-                new Vector3f(0f,1,-0.2f),
-                new Vector3f(0f,1,0.2f),
-                new Vector3f(1f,0,-0.2f),
-                new Vector3f(1f,0,0.2f),
-                new Vector3f(1f,1,-0.2f),
-                new Vector3f(1f,1,0.2f)
+                new Vector3f(-size/2,0,-0.2f),
+                new Vector3f(-size/2,0,0.2f),
+                new Vector3f(-size/2,size,-0.2f),
+                new Vector3f(-size/2,size,0.2f),
+                new Vector3f(size/2,0,-0.2f),
+                new Vector3f(size/2,0,0.2f),
+                new Vector3f(size/2,size,-0.2f),
+                new Vector3f(size/2,size,0.2f)
         ))));
         this.attach(physics);
 
         var camera = new CameraComponent();
-        camera.setPositionOffset(new Vector3f(0,1.8f,3));
+        camera.setPositionOffset(new Vector3f(0,1.8f,3).multiply(size));
         camera.setRotationOffset(new Vector3f(30,0,0));
         this.attach(camera);
 

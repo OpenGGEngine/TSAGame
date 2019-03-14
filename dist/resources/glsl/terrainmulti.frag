@@ -8,7 +8,7 @@ uniform vec3 scale;
 void main() {
 	vec4 blendMapColor = getTex(Ka);
 	float backTextureAmount = 1 - (blendMapColor.r + blendMapColor.b +blendMapColor.g);
-    vec2 tiledMapEditor = vec2(textureCoord.x * scale.x, textureCoord.y * scale.z) * 40;
+    vec2 tiledMapEditor = vec2(textureCoord.x * scale.x, textureCoord.y * scale.z);
 
     vec4 wcolor = texture(terrain, vec3(tiledMapEditor,0)) * backTextureAmount;
     vec4 wcolorr = texture(terrain, vec3(tiledMapEditor,1)) * blendMapColor.r;
@@ -40,5 +40,5 @@ void main() {
 		col += getPhongFrom(lights[i]);
 	}
 
-	fcolor = vec4(col.xyz,1);
+	fcolor = vec4(col,1);
 }

@@ -42,6 +42,7 @@ public class TSAWorldChangeZone extends WorldChangeZone {
     public void deserialize(GGInputStream in) throws IOException{
         super.deserialize(in);
         target = in.readString();
+        this.setBox(new AABB(3,3,3));
 
         this.setOnExit((__) -> ((WorldEntryZone) WorldEngine.getCurrent().find(target)).spawn());
     }
