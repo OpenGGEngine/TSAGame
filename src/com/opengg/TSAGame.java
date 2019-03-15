@@ -34,8 +34,8 @@ public class TSAGame extends GGApplication {
 
     public static void main(String[] args) {
         var wininfo = new WindowInfo();
-        wininfo.width = 1280;
-        wininfo.height = 720;
+        wininfo.width = 1024;
+        wininfo.height = 1024;
         wininfo.vsync = false;
         wininfo.name = "TSA Game";
         OpenGG.initialize(INSTANCE = new TSAGame(), wininfo);
@@ -85,7 +85,6 @@ public class TSAGame extends GGApplication {
        }
 
        // WorldEngine.getCurrent().attach(new LightComponent(Light.createDirectional(new Quaternionf(new Vector3f(0,0,-80)), new Vector3f(1,1,200f/255f))));
-
         WorldEngine.getCurrent().attach(new PlayerWorldComponent().setPositionOffset(new Vector3f(WorldEngine.getCurrent().getAllDescendants().stream()
                                                                                                                             .filter(c -> c instanceof WorldEntryZone)
                                                                                                                             .filter(c -> c.getName().equals("spawn"))

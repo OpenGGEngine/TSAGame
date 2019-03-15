@@ -12,6 +12,8 @@ void main() {
 	generatePhongData();
 	useMaterial(material);
 
+    if(trans == 0.1f) discard;
+
     vec3 T = normalize(vec3(model * vec4(tan,   0.0)));
     vec3 N = normalize(vec3(model * vec4(norm,    0.0)));
     vec3 B = normalize(cross(T,N));
