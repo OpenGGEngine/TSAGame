@@ -4,3 +4,6 @@ damageValue=VAL health points;
 
 healDisplay=Healing;
 healValue=VAL health points;
+
+poisonDisplay=Poison;
+poisonValue=VAL health points for 3 turns;

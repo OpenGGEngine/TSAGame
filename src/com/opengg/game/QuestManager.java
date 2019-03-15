@@ -4,6 +4,7 @@ import com.opengg.core.Configuration;
 import com.opengg.core.console.GGConsole;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.io.FileStringLoader;
+import com.opengg.core.world.WorldEngine;
 import com.opengg.util.StringUtil;
 
 import java.util.HashMap;
@@ -140,6 +141,11 @@ public class QuestManager {
             if(Player.PLAYER.getInventory().getItems().containsKey(item) && Player.PLAYER.getInventory().getItems().get(item) >= amount){
                 advanceSubQuest(quest.name, sub.name);
             }
+        }
+
+        if(sub.completionType.equals("world")){
+            if(WorldEngine.getCurrent().getName().contains(sub.completionValue))
+                advanceSubQuest(quest.name, sub.name);
         }
     }
 

@@ -42,7 +42,7 @@ vec3 getPhongFrom(Light light){
 
     vec3 fragColor = (fdif + fspec) * attenuation * shadowcover * light.color.rgb;
 
-    return vec3(shadowcover,shadowcover,shadowcover);
+    return fragColor;
 }
 
 

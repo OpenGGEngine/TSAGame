@@ -1,6 +1,6 @@
 [
     name=goToBeeville;
-    displayName=Go to GETNAMELATER;
+    displayName=Go to Bee Village;
 
     firstState=talkToBee;
 
@@ -10,17 +10,25 @@
     }
 
     {
-        name=followToEnemy;
-        displayName=Follow worker bee to BEEVILLENAME;
+        name=fightFirstEnemy;
+        displayName=Defeat the <probably beaver> blocking your path;
+
+        completionType=enemy;
+
+        completionValue=wasp;
 
         requirements=talkToBee;
     }
 
     {
-        name=fightFirstEnemy;
-        displayName=Defeat the <probably beaver> blocking your path;
+        name=followToTown;
+        displayName=Follow worker bee to Bee Village;
 
-        requirements=followToEnemy;
+        completionType=world;
+
+        completionValue=beetown;
+
+        requirements=fightFirstEnemy;
     }
 ]
 

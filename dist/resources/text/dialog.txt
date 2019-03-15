@@ -1,12 +1,61 @@
+//INTRO BEE CUTSCENE
 [
 {name;introBee}
-TODO
+Wake up! Can you move?
+{next;introduction}
 ]
 
+[
+{name;introduction}
+Oh, you're finally awake!
+You've been here for hours, I was about to go back to the village!
+I just came out here to get some pollen and I saw you and ...
+{next;introduction2}
+]
 
+[
+{name;introduction2}
+...
+{next;introduction3}
+]
 
+[
+{name;introduction3}
+Wait, are you..
+are..
+are you Simon? What are you doing here?
+{next;introduction4}
+]
 
+[
+{name;introduction4}
+I gotta tell the Queen Bee about this!
+Head down this path, it'll lead you to our village!
+{next;introduction5}
+]
 
+[
+{name;introduction5}
+Wait, I forgot about that THING in the way!
+You're Simon, right? Can you fight it?
+{quest;goToBeeville;talkToBee}
+{next;introduction6}
+]
+
+[
+{name;introduction6}
+Here's some honey we made recently in case you're hurt.
+{next;introduction7}
+{item;honey;5}
+]
+
+[
+{name;introduction7}
+And this extra spear I have for occasions like this!
+I'd use it, but I don't like fighting.
+{setNext;afterFight}
+{item;stingerSpear;1}
+]
 
 
 

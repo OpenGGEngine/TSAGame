@@ -1,4 +1,68 @@
 [
+    name=honey;
+    displayName=Jar of Honey;
+    desc=A sweet delicacy produced by bees;
+    unique=false;
+    usable=true;
+
+    sprite=items/honey.png;
+    type=item;
+
+    targeted=true;
+
+    {
+        name=heal;
+        value=15;
+    }
+]
+
+[
+    name=stingerSpear;
+    displayName=Improvised stinger spear;
+    desc=Spear with a bee stinger on the tip.
+        Small, but poisons enemies;
+
+    unique=false;
+    usable=true;
+
+    type=ability;
+
+    sprite=items/spear.png;
+
+    targeted=true;
+
+    {
+        name=damage;
+        value=5;
+    }
+
+    {
+         name=poison;
+         value=3;
+    }
+]
+
+[
+    name=fists;
+    displayName=Fists;
+    desc=Useful if you have nothing else;
+
+    unique=false;
+    usable=true;
+
+    type=ability;
+
+    sprite=items/fist.png;
+
+    targeted=true;
+
+    {
+        name=damage;
+        value=8;
+    }
+]
+
+[
     name=knife;
     displayName=Knife;
     desc=Useful for stabbing people and food;

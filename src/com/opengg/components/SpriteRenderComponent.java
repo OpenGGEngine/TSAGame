@@ -108,7 +108,6 @@ public class SpriteRenderComponent extends RenderComponent {
     @Override
     public void update(float delta){
         boolean forwards = angle >= 0;
-
         if(textures.containsKey(animToUse))
             current = textures.get(animToUse);
         else
