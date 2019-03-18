@@ -1,12 +1,9 @@
 package com.opengg.game;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Inventory {
-    Map<String, Integer> items = new HashMap<>();
+    Map<String, Integer> items = new LinkedHashMap<>();
     Set<String> abilities = new HashSet<>();
 
     public Inventory(){
@@ -42,5 +39,9 @@ public class Inventory {
 
     public int getItemCount(String item){
         return items.get(item);
+    }
+
+    public String getElementByIndex(int index){
+        return (String)items.keySet().toArray()[index];
     }
 }

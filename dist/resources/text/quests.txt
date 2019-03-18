@@ -6,12 +6,12 @@
 
     {
         name=talkToBee;
-        displayName=Talk to worker bee about your situation
+        displayName=Talk to worker bee;
     }
 
     {
         name=fightFirstEnemy;
-        displayName=Defeat the <probably beaver> blocking your path;
+        displayName=Fight the enemies;
 
         completionType=enemy;
 
@@ -22,7 +22,7 @@
 
     {
         name=followToTown;
-        displayName=Follow worker bee to Bee Village;
+        displayName=Enter Bee Village;
 
         completionType=world;
 

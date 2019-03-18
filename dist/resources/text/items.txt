@@ -1,6 +1,6 @@
 [
     name=honey;
-    displayName=Jar of Honey;
+    displayName=Honey Jar;
     desc=A sweet delicacy produced by bees;
     unique=false;
     usable=true;
@@ -18,7 +18,7 @@
 
 [
     name=stingerSpear;
-    displayName=Improvised stinger spear;
+    displayName=Stinger spear;
     desc=Spear with a bee stinger on the tip.
         Small, but poisons enemies;
 

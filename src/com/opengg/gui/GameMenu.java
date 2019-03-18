@@ -10,10 +10,7 @@ import com.opengg.core.math.Vector2f;
 import com.opengg.core.render.text.Text;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.world.WorldEngine;
-import com.opengg.game.ItemManager;
-import com.opengg.game.Player;
-import com.opengg.game.Quest;
-import com.opengg.game.QuestManager;
+import com.opengg.game.*;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -27,8 +24,12 @@ public class GameMenu {
     static GUIGroup inventoryMenu;
     static GUIGroup questMenu;
     static GUIGroup playerMenu;
+    static GUIGroup bottomDescBox;
+    static GUITexture arrow1 = new GUITexture(Resource.getTexture("arrow.png"),new Vector2f(0f,0f),new Vector2f(0.02f,0.025f));
+    static GUITexture itembox = new GUITexture(Texture.ofColor(Color.WHITE),new Vector2f(0.20f,0.08f),new Vector2f(0.1f,0.1f));
+    static GUIText description = new GUIText(Resource.getTruetypeFont("realfont.ttf"),new Vector2f(0.3255f,0.15f));
 
-    static int current = 1;
+    static int current = 2;
 
     static int pointer = 0;
 
@@ -39,39 +40,62 @@ public class GameMenu {
 
         mainMenu = new GUI();
 
-        menuGroup = new GUIGroup(new Vector2f(0.25f,0.25f));
-        menuGroup.addItem("background", new GUITexture(Texture.ofColor(Color.GRAY), new Vector2f(0,0), new Vector2f(0.5f,0.5f)));
+        menuGroup = new GUIGroup(new Vector2f(0.15f,0.15f));
+        menuGroup.addItem("background", new GUITexture(Resource.getTexture("menu.png"), new Vector2f(0,0), new Vector2f(0.7f,0.7f)));
         menuGroup.getItem("background").setLayer(-0.5f);
+        menuGroup.addItem("pArrow",arrow1);
+        menuGroup.addItem("items", new GUIButton(
+                new Vector2f(0.040f,0.587f),
+                new Vector2f(0.08f, 0.06f),
+                Resource.getTexture("trans.png"),
+                () -> current=0));
 
-        menuGroup.addItem("left", new GUIButton(
-                new Vector2f(0,0.45f),
-                new Vector2f(0.05f, 0.05f),
-                Texture.ofColor(Color.RED),
-                () -> current--));
+        menuGroup.addItem("status", new GUIButton(
+                new Vector2f(0.040f,0.457f),
+                new Vector2f(0.09f, 0.06f),
+                Resource.getTexture("trans.png"),
+                () -> current=1));
 
-        menuGroup.addItem("right", new GUIButton(
-                new Vector2f(0.45f,0.45f),
-                new Vector2f(0.05f, 0.05f),
-                Texture.ofColor(Color.RED),
+        menuGroup.addItem("quests1", new GUIButton(
+                new Vector2f(0.040f,0.337f),
+                new Vector2f(0.10f, 0.06f),
+                Resource.getTexture("trans.png"),
+                () -> current=2));
+
+        menuGroup.addItem("save", new GUIButton(
+                new Vector2f(0.040f,0.21f),
+                new Vector2f(0.08f, 0.06f),
+                Resource.getTexture("trans.png"),
+                () -> current=3));
+
+        menuGroup.addItem("quit", new GUIButton(
+                new Vector2f(0.040f,0.087f),
+                new Vector2f(0.08f, 0.06f),
+                Resource.getTexture("trans.png"),
                 () -> current++));
 
         inventoryMenu = new GUIGroup(new Vector2f(0,0));
         inventoryMenu.addItem("title",
-                new GUIText(Text.from("Inventory").size(0.14f).center(true), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.18f,0.45f)));
-        inventoryMenu.addItem("gold",
-                new GUIText(Text.from(Player.PLAYER.getMoney() + " gold").size(0.14f).center(true),
-                        Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.01f,0.01f)));
+                new GUIText(Text.from("Inventory").size(0.18f).center(true), Resource.getTruetypeFont("realfont.ttf"), new Vector2f(0f,0f)));
+
         inventoryMenu.addItem("holder", new GUIGroup(new Vector2f(0,0)));
 
         questMenu = new GUIGroup(new Vector2f(0,0));
         questMenu.addItem("title",
-                new GUIText(Text.from("Quests").size(0.14f).center(true), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.20f,0.45f)));
-        questMenu.addItem("holder1", new GUIGroup(new Vector2f(0,0)));
-        questMenu.addItem("holder2", new GUIGroup(new Vector2f(0.2f,0)));
+                new GUIText(Text.from("Quests").size(0.18f).center(true), Resource.getTruetypeFont("realfont.ttf"), new Vector2f(0.370f,0.65f)));
+        questMenu.addItem("holder1", new GUIGroup(new Vector2f(0f,0.0f)));
+        questMenu.addItem("holder2", new GUIGroup(new Vector2f(0f,0)));
         questMenu.addItem("arrow", new GUITexture(Texture.ofColor(Color.BLUE), new Vector2f(0,0), new Vector2f(0.02f,0.02f)));
 
 
         playerMenu = new GUIGroup(new Vector2f(0,0));
+        playerMenu.addItem("bar",new GUIProgressBar(new Vector2f(0.45f,0.635f),new Vector2f(0.2f,0.02f),Color.GREEN,Color.GRAY).setLayer(-0.5f));
+        playerMenu.addItem("barText",new GUIText(Text.from("0/0").size(0.1f),Resource.getTruetypeFont("realfont.ttf"),new Vector2f(0.55f,0.665f)));
+        playerMenu.addItem("expbar",new GUIProgressBar(new Vector2f(0.45f,0.58f),new Vector2f(0.2f,0.02f),Color.CYAN,Color.GRAY));
+        playerMenu.addItem("expText",new GUIText(Text.from("Lvl 1: 0/0 to next").size(0.08f),Resource.getTruetypeFont("realfont.ttf"),new Vector2f(0.49f,0.61f)));
+        playerMenu.addItem("gold",
+                new GUIText(Text.from(Player.PLAYER.getMoney() + " gold").size(0.14f).center(true),
+                        Resource.getTruetypeFont("realfont.ttf"), new Vector2f(0.51f,0.1f)));
 
         mainMenu.getRoot().addItem("menu", menuGroup);
 
@@ -79,6 +103,12 @@ public class GameMenu {
         menuGroup.addItem("quests", questMenu);
         menuGroup.addItem("player", playerMenu);
 
+        bottomDescBox = new GUIGroup(new Vector2f(0f,0f));
+        bottomDescBox.addItem("boxTex",new GUITexture(Resource.getTexture("bottomBox.png"),new Vector2f(0.1655f,0),new Vector2f(0.535f,0.2f)));
+        description.setText(Text.from("sdsdsdsdsdsdajkbafsd.kjadf \n jdajk.sahdbadshazcuh").size(0.1f));
+        bottomDescBox.addItem("descTex",description);
+        bottomDescBox.addItem("descTexture",itembox);
+        menuGroup.addItem("bottomD",bottomDescBox);
 
         GUIController.addAndUse(mainMenu, "menu");
 
@@ -86,59 +116,40 @@ public class GameMenu {
 
     public static void update(){
         menuGroup.setEnabled(active);
-
+        bottomDescBox.setEnabled(true);
+        arrow1.setEnabled(true);
         if(!active) return;
 
 
         if(current == 0){
-            menuGroup.getItem("left").setEnabled(false);
-            menuGroup.getItem("right").setEnabled(true);
-
-
             inventoryMenu.setEnabled(true);
             questMenu.setEnabled(false);
             playerMenu.setEnabled(false);
 
             int i = 0;
 
-            ((GUIText)inventoryMenu.getItem("gold")).setText(Text.from(Player.PLAYER.getMoney() + " gold").size(0.1f));
-
             var holder = (GUIGroup) inventoryMenu.getItem("holder");
 
             holder.clear();
-
+            String selectedItem = Player.PLAYER.getInventory().getElementByIndex(pointer);
+            Item tempItem = ItemManager.generate(selectedItem);
+            description.setText(tempItem.desc);
+            itembox.setTexture(Texture.create(Texture.config(),tempItem.sprite));
+            arrow1.setPositionOffset(new Vector2f(0.19f, 0.64f - (pointer * 0.045f)));
             for(var item : Player.PLAYER.getInventory().getItems().entrySet()){
-                if(item.getValue() == 0) continue;
-
-                var itemGroup = new GUIGroup(new Vector2f(0, 0.40f - (i * 0.08f)));
-
-                var itemClass = ItemManager.generate(item.getKey());
-
-                Texture texture;
-                if(itemCache.containsKey(itemClass.sprite)) texture = itemCache.get(itemClass.sprite);
-                else texture = Texture.create(Texture.config(), itemClass.sprite);
-                itemCache.putIfAbsent(itemClass.sprite, texture);
-
-                itemGroup.addItem(item.getKey(), new GUITexture(
-                        texture, new Vector2f(0.001f,-0.025f), new Vector2f(0.05f,0.05f)));
-
-                itemGroup.addItem("quantity", new GUIText(
-                        Text.from( " x " + item.getValue()).size(0.1f), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.05f,0)
-                ));
-
-                itemGroup.addItem("desc", new GUIText(
-                        Text.from(itemClass.desc).size(0.1f), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.10f,0)
-                ));
-
-                holder.addItem(item.getKey(), itemGroup);
-
+                Item temp = ItemManager.generate(item.getKey());
+                GUIText text = new GUIText(Text.from(temp.displayName+ "        : " + Player.PLAYER.getInventory().getItems().get(item.getKey())).size(0.1f),
+                        Resource.getTruetypeFont("realfont.ttf"),new Vector2f(0.22f, 0.65f - (i * 0.045f)));
+                holder.addItem(item.getKey(),text);
                 i++;
             }
         }
-        else if(current == 1){
+        else if(current == 2){
 
-            menuGroup.getItem("left").setEnabled(true);
-            menuGroup.getItem("right").setEnabled(true);
+            var progress = QuestManager.getQuests().values().stream()
+                    .filter(q -> q.state == Quest.QuestState.ACTIVE).collect(Collectors.toList());
+
+            pointer = FastMath.clamp(pointer, 0, progress.size()-1);
 
             inventoryMenu.setEnabled(false);
             questMenu.setEnabled(true);
@@ -148,63 +159,51 @@ public class GameMenu {
 
             questHolder.clear();
 
-            var subHolder = (GUIGroup) questMenu.getItem("holder2");
-
-            subHolder.clear();
-
-            var arrow = (GUIItem) questMenu.getItem("arrow");
-
-            int currentLine = 0;
-
-            var progress = QuestManager.getQuests().values().stream()
-                    .filter(q -> q.state == Quest.QuestState.ACTIVE).collect(Collectors.toList());
-
-            pointer = FastMath.clamp(pointer, 0, progress.size()-1);
-
-            for(var quest : progress) {
-                var singleQuest = new GUIGroup(new Vector2f(0, 0.42f - (currentLine * 0.048f)));
-                singleQuest.addItem("label",
-                        new GUIText(Text.from(quest.displayName).size(0.09f), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.02f,0)));
-                int cline2 = currentLine;
-
-                singleQuest.addItem("listener", new GUIButton(
-                        new Vector2f(0.00f,-0.01f),
-                        new Vector2f(0.21f, 0.048f),
-                        Texture.ofColor(Color.RED, 0.0f),
-                        () -> pointer = cline2));
-
-                questHolder.addItem(quest.name, singleQuest);
-
-                if(currentLine == pointer) arrow.setPositionOffset(new Vector2f(0, 0.42f - (currentLine * 0.048f)));
-                currentLine++;
+            var holder1 = (GUIGroup) questMenu.getItem("holder2");
+            holder1.clear();
+            int i=0;
+            for(var quest:((Quest)QuestManager.getQuests().values().toArray()[pointer]).subQuests.values()){
+                 String mod = "";
+                switch(quest.state){
+                    case DONE:
+                        mod = "Done";
+                        break;
+                    case ACTIVE:
+                        mod = "Active";
+                        break;
+                    case NOT_STARTED:
+                        continue;
+                }
+                GUIText text = new GUIText(Text.from(quest.displayName+":  "+mod).size(0.08f),
+                        Resource.getTruetypeFont("realfont.ttf"),new Vector2f(0.42f, 0.60f - (i * 0.045f)));
+                holder1.addItem(quest.name,text);
+                i++;
             }
+
+            arrow1.setPositionOffset(new Vector2f(0.19f, 0.60f - (pointer * 0.045f)));
+            i=0;
+            for(var quest : progress){
+                GUIText text = new GUIText(Text.from(quest.displayName).size(0.1f),
+                        Resource.getTruetypeFont("realfont.ttf"),new Vector2f(0.22f, 0.60f - (i * 0.045f)));
+                questHolder.addItem(quest.name,text);
+                i++;
+            }
+
 
             var selectedQuest = progress.get(pointer);
+            description.setText(selectedQuest.desc);
 
-            /*subHolder.addItem("name",
-                    new GUIText(Text.from(selectedQuest.displayName).size(0.09f), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.029f,0.40f)));*/
-
-            currentLine = 0;
-
-            var allSubs = selectedQuest.subQuests.values().stream()
-                    .filter(s -> s.state != Quest.QuestState.NOT_STARTED)
-                    .collect(Collectors.toList());
-
-            for(var sub : allSubs){
-                var singleSub = new GUIGroup(new Vector2f(0.0f, 0.42f - (currentLine * 0.048f)));
-
-                singleSub.addItem("text", new GUIText(Text.from(sub.displayName).size(0.08f), Resource.getTruetypeFont("consolas.ttf"), new Vector2f(0.02f,0)));
-                subHolder.addItem(sub.name, singleSub);
-                currentLine++;
-            }
-
-        }else if(current == 2){
-            menuGroup.getItem("left").setEnabled(true);
-            menuGroup.getItem("right").setEnabled(false);
-
+        }else if(current == 1){
             inventoryMenu.setEnabled(false);
             questMenu.setEnabled(false);
             playerMenu.setEnabled(true);
+            bottomDescBox.setEnabled(false);
+            arrow1.setEnabled(false);
+            ((GUIText)playerMenu.getItem("barText")).setText((int)Player.PLAYER.getHealth()+"/"+Player.PLAYER.getMaxHealth());
+            ((GUIProgressBar)playerMenu.getItem("bar")).setPercent(Player.PLAYER.getHealth()/Player.PLAYER.getMaxHealth());
+            ((GUIText)playerMenu.getItem("expText")).setText("Lvl " + Player.PLAYER.level+" :" +Player.PLAYER.exp+"/"+Player.PLAYER.expNextLevel+ " to next");
+            ((GUIProgressBar)playerMenu.getItem("expbar")).setPercent((float)Player.PLAYER.exp/Player.PLAYER.expNextLevel);
+            ((GUIText)playerMenu.getItem("gold")).setText("Gold: " + Player.PLAYER.getMoney());
         }
     }
 
