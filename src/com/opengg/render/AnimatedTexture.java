@@ -32,19 +32,23 @@ public class AnimatedTexture {
         counter = 0;
     }
 
-    public void update(float delta){
-        if(frame >= animLength-1){
-            if(repeat){
-                frame = 0;
-            }else{
-                return;
-            }
-        }
+    public void setAnimDelay(float animDelay) {
+        this.animDelay = animDelay;
+    }
 
+    public void update(float delta){
         counter += delta;
         if(counter > animDelay){
             counter = 0;
             frame++;
+        }
+
+        if(frame == animLength){
+            if(repeat){
+                frame = 0;
+            }else{
+                frame = animLength-1;
+            }
         }
     }
 

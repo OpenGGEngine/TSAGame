@@ -30,3 +30,45 @@
     size=1.5;
 
 ]
+
+[
+    name=queenaidbee;
+    displayName=Queen's Helper Bee;
+
+    health=50;
+
+    hostile=false;
+
+    sprite=bee2;
+
+    size=1.5;
+
+]
+
+[
+    name=dronebee;
+    displayName=Drone Bee;
+
+    health=50;
+
+    hostile=false;
+
+    sprite=bee3;
+
+    size=1.5;
+
+]
+
+[
+    name=queenBee;
+    displayName=Queen Bee;
+
+    health=350;
+
+    hostile=false;
+
+    sprite=queenbee;
+
+    size=3;
+
+]

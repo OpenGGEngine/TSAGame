@@ -8,7 +8,7 @@
     sprite=items/honey.png;
     type=item;
 
-    targeted=true;
+    targeted=false;
 
     {
         name=heal;

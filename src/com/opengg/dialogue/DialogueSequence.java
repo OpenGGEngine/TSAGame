@@ -114,6 +114,10 @@ public class DialogueSequence implements KeyboardListener {
             }
         }
 
+        if(!current.setNext.equals("")){
+            ai.setDialogue(current.setNext);
+        }
+
         ai.setDialogueAnimation(current.anim);
     }
 

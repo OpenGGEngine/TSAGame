@@ -32,6 +32,8 @@ public class DialogueNode {
     String requirementQuestState = "";
     String failOpt;
 
+    String setNext = "";
+
     @Override
     public String toString() {
         return "DialogueNode{" +

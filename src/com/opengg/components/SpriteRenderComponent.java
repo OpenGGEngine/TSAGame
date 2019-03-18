@@ -32,7 +32,7 @@ public class SpriteRenderComponent extends RenderComponent {
 
     String character;
 
-    private static Map<String, AnimatedTexture> getTextureMapFor(String character) {
+    public static Map<String, AnimatedTexture> getTextureMapFor(String character) {
         var path = "resources/tex/characters/" + character + "/";
         var dir = new File(Resource.getAbsoluteFromLocal(path));
 

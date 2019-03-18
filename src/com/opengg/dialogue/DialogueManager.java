@@ -59,6 +59,9 @@ public class DialogueManager implements KeyboardListener {
         newNode.text = section.trim();
         newNode.next = commands.getOrDefault("next", List.of("")).get(0);
 
+        newNode.setNext = commands.getOrDefault("setNext", List.of("")).get(0);
+
+
         if(commands.containsKey("next") && commands.get("next").size() > 1){
             newNode.failOpt = commands.get("next").get(1);
             newNode.requirementQuest = commands.get("next").get(2);

@@ -57,9 +57,65 @@ I'd use it, but I don't like fighting.
 {item;stingerSpear;1}
 ]
 
+[
+{name;afterFight}
+I'll see you in the town!
+Man, I really don't like fighting...
+]
 
+[
+{name;discussTown}
+We gotta go talk to the Queen about this!
+She's in that second building there, the left one.
+She'll fill you in on what's been going on.
+{next;queenGreeting}
+]
 
+//QUEEN DISCUSSION
 
+[
+{name;queenGreeting}
+I've heard the buzz around here that you'd be coming, Simon!
+We heartily welcome you to our village.
+{optionCount;1}
+{option0;queenGreeting2;Thank you, but why does everyone know me around here?}
+]
+
+[
+{name;queenGreeting2}
+Well I think you know the answer to that!
+You're the hero! The one who defeated Emak those long years ago!
+Wait, but then why are you here?
+{next;queenEmakDiscussion}
+]
+
+[
+{name;queenEmakDiscussion}
+Oh no, does that mean what I think it does?
+Did Emak complete his ultimate weapon?
+{optionCount;1}
+{option0;queenEmakDiscussion2;Unfortunately yes. Wait, where exactly am I?}
+]
+
+[
+{name;queenEmakDiscussion2}
+This is my village, a small outpost of bees forced out of our
+city many years ago, back when Emak roamed this realm.
+{next;queenEmakDiscussion3}
+]
+
+[
+{name;queenEmakDiscussion3}
+After you banished him from here, we thought we'd finally be
+able to live in peace, and for the most part we have, but things
+have been strange around here for a while.
+{next;queenEmakDiscussion4}
+]
+
+[
+{name;queenEmakDiscussion4}
+AA
+]
 
 
 

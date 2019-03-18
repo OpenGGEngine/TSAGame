@@ -3,6 +3,10 @@ package com.opengg.game;
 import com.opengg.components.SpriteRenderComponent;
 import com.opengg.core.engine.Resource;
 import com.opengg.core.gui.*;
+import com.opengg.core.io.input.keyboard.Key;
+import com.opengg.core.io.input.keyboard.KeyboardController;
+import com.opengg.core.io.input.keyboard.KeyboardListener;
+import com.opengg.core.math.Quaternionf;
 import com.opengg.core.math.Tuple;
 import com.opengg.core.math.Vector2f;
 import com.opengg.core.math.Vector3f;
@@ -10,6 +14,7 @@ import com.opengg.core.render.text.Text;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.util.ArrayUtil;
 import com.opengg.core.world.WorldEngine;
+import com.opengg.core.world.components.CameraComponent;
 
 import java.awt.Color;
 import java.util.HashMap;
@@ -17,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class Battle {
+public class Battle implements KeyboardListener {
     String FONT = "Dosis-SemiBold.ttf";
 
     BattleInfo info;
@@ -28,10 +33,13 @@ public class Battle {
     GUIGroup abilityMenu;
     GUIGroup generalMenu;
     GUIGroup enemyMenu;
+    GUITextBox infoBox;
 
     GUIGroup infoMenu;
 
     Item selectedItem;
+
+    Runnable onComplete = () -> {};
 
     HashMap<String, SpriteRenderComponent> fighterRenderers = new HashMap<>();
 
@@ -40,23 +48,27 @@ public class Battle {
     }
 
     public void start(){
+        KeyboardController.addKeyboardListener(this);
         info.allies.add("player0");
 
         for(var ally : info.allies){
             var renderer = new SpriteRenderComponent(CharacterManager.getExisting(ally).getSprite());
-            WorldEngine.getCurrent().attach(renderer.setPositionOffset(new Vector3f(-5, 1, -6)));
+            WorldEngine.getCurrent().attach(renderer.setPositionOffset(new Vector3f(-2, 0, -3)).setScaleOffset(CharacterManager.getExisting(ally).getSize()));
             fighterRenderers.put(ally, renderer);
         }
 
         for(var enemy : info.enemies){
             var renderer = new SpriteRenderComponent(CharacterManager.getExisting(enemy).getSprite());
-            WorldEngine.getCurrent().attach(renderer.setPositionOffset(new Vector3f(5, 1, -6)));
+            renderer.setAngle(180);
+            WorldEngine.getCurrent().attach(renderer.setPositionOffset(new Vector3f(3, 0, -6)).setScaleOffset(CharacterManager.getExisting(enemy).getSize()));
             fighterRenderers.put(enemy, renderer);
         }
 
+        WorldEngine.getCurrent().attach(new CameraComponent().setPositionOffset(new Vector3f(0,2,0)).setRotationOffset(new Quaternionf(new Vector3f(15,0,0))));
+
         GUIController.addAndUse(battleGUI, "battle");
         battleGUI.addItem("menu", battleMenu = new GUIGroup(new Vector2f(0.03f, 0.6f)));
-        battleGUI.addItem("info", infoMenu = new GUIGroup(new Vector2f(0.25f, 0.8f)));
+        battleGUI.addItem("info", infoMenu = new GUIGroup(new Vector2f(0.28f, 0.8f)));
         battleGUI.addItem("enemies", enemyMenu = new GUIGroup(new Vector2f(0.8f, 0.7f)));
         infoMenu.addItem("background",
                 new GUITexture(Texture.ofColor(Color.GRAY, 0.8f), new Vector2f(-0.015f,-0.02f), new Vector2f(0.4f, 0.2f)).setLayer(-0.5f));
@@ -65,7 +77,7 @@ public class Battle {
         enemyMenu.addItem("sublist", new GUIGroup());
 
         battleMenu.addItem("background",
-                new GUITexture(Texture.ofColor(Color.GRAY, 0.8f), new Vector2f(-0.015f,-0.02f), new Vector2f(0.2f, 0.4f)).setLayer(-0.5f));
+                new GUITexture(Texture.ofColor(Color.GRAY, 0.8f), new Vector2f(-0.015f,-0.02f), new Vector2f(0.22f, 0.4f)).setLayer(-0.5f));
 
         battleMenu.addItem("item", itemMenu = new GUIGroup());
         battleMenu.addItem("ability", abilityMenu = new GUIGroup());
@@ -76,6 +88,16 @@ public class Battle {
 
         abilityMenu.addItem("sublist", new GUIGroup());
         abilityMenu.addItem("back", new GUIButton(new Vector2f(0,0), new Vector2f(0.05f,0.05f),  Texture.ofColor(Color.BLUE), () -> enableSubMenu(generalMenu)));
+
+        infoBox = new GUITextBox(new Vector2f(0.25f,0), new Vector2f(0.5f,0.2f))
+                .setText("")
+                .setBackground(Texture.ofColor(Color.BLACK, 0.5f))
+                .setSpeed(1/60f)
+                .setTextSize(0.12f)
+                .setMargin(0.03f)
+                .setScrollMode(GUITextBox.ScrollMode.SPEEDABLE_SCROLL)
+                .setFont(Resource.getTruetypeFont("consolas.ttf"));
+        battleGUI.addItem("text", infoBox);
 
 
         var run = new GUIGroup();
@@ -93,6 +115,12 @@ public class Battle {
         abilities.addItem("select", new GUIButton(new Vector2f(0.1f,0.025f), () -> enableSubMenu(abilityMenu)));
         abilities.addItem("text", new GUIText(Text.from("Abilities").size(0.15f).kerning(true), Resource.getTruetypeFont(FONT)));
         generalMenu.addItem("abilityMenu", abilities);
+
+        battleMenu.setEnabled(false);
+        setText("You have encountered a " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName() + "!", () -> {
+            infoBox.setText("What is your next move?");
+            battleMenu.setEnabled(true);
+        });
 
         enableSubMenu(generalMenu);
 
@@ -198,7 +226,7 @@ public class Battle {
                 .map(s -> " - " + s + "\n")
                 .collect(Collectors.joining());
 
-        infoMenu.addItem("effects",  new GUIText(Text.from(string).size(0.08f), Resource.getTruetypeFont(FONT), new Vector2f(0.001f,0.11f)));
+        infoMenu.addItem("effects",  new GUIText(Text.from(string).size(0.08f), Resource.getTruetypeFont(FONT), new Vector2f(0.001f,0.08f)));
     }
 
     private void runAIs() {
@@ -223,6 +251,14 @@ public class Battle {
                     .collect(Collectors.toMap(s -> s, s -> -1))
         );
 
+        if(items.isEmpty()){
+            setText(CharacterManager.getExisting(character).getDisplayName() + " has no attacks remaining!", () -> {
+                infoBox.setText("What is your next move?");
+                battleMenu.setEnabled(true);
+                updateSubMenus();
+            });
+        }
+
         var attack = ArrayUtil.getRandom(items.keySet());
 
         if(ItemManager.generate(attack).targeted){
@@ -231,15 +267,26 @@ public class Battle {
             attack(CharacterManager.getExisting(character), null, ItemManager.generate(attack));
         }
 
+        setText(CharacterManager.getExisting(character).getDisplayName() + " used " + ItemManager.generate(attack).displayName + "!", () -> {
+            infoBox.setText("What is your next move?");
+            battleMenu.setEnabled(true);
+            updateSubMenus();
+        });
+
     }
 
     public void playerAttack(Character enemy, Item attack){
         if(attack == null) return;
 
         attack(Player.PLAYER, enemy, attack);
-
-        runAIs();
+        battleMenu.setEnabled(false);
         updateSubMenus();
+
+        setText("You used " + attack.displayName + "!", () -> {
+            runAIs();
+        });
+
+
     }
 
     public void attack(Character source, Character enemy, Item attack){
@@ -293,14 +340,40 @@ public class Battle {
         }
     }
 
+    public void setText(String text, Runnable onAdvance){
+        infoBox.reset();
+        infoBox.setText(text);
+
+        onComplete = onAdvance;
+    }
+
     public void end(boolean success){
-        if(!success){
-            System.out.println("YOU DIED");
+        if(success){
+            setText("You have defeated the enemy and acquired 10 gold!", () -> BattleManager.end(true));
+        }else{
+            setText("You have failed to defeat " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName(), () -> BattleManager.end(false));
         }
-        BattleManager.end();
+
+        GUIController.deactivateGUI("battle");
     }
 
     public void update(){
+
+    }
+
+
+    @Override
+    public void keyPressed(int key) {
+        if(key == Key.KEY_SPACE){
+            if(onComplete != null && infoBox.isComplete()){
+                onComplete.run();
+                onComplete = null;
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(int key) {
 
     }
 }

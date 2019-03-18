@@ -29,7 +29,7 @@ public class WorldAI extends Component {
     List<String> args = List.of();
 
     HashMap<String, String> savedValues = new HashMap<>();
-    float speed = 2;
+    float speed = 3.5f;
 
     public WorldAI() {
         this.setUpdateDistance(50);

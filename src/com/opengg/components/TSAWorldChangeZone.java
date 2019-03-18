@@ -1,5 +1,6 @@
 package com.opengg.components;
 
+import com.opengg.TSAGame;
 import com.opengg.core.physics.collision.AABB;
 import com.opengg.core.util.GGInputStream;
 import com.opengg.core.util.GGOutputStream;
@@ -20,7 +21,10 @@ public class TSAWorldChangeZone extends WorldChangeZone {
         super(world, new AABB(2,2,2));
         this.target = target;
 
-        this.setOnExit((__) -> ((WorldEntryZone) WorldEngine.getCurrent().find(target)).spawn());
+        this.setOnExit((__) -> {
+            ((WorldEntryZone) WorldEngine.getCurrent().find(target)).spawn();
+            TSAGame.lastLoad = ((WorldEntryZone) WorldEngine.getCurrent().find(target));
+        });
         this.setExitCondition(i -> i.data instanceof PlayerWorldComponent);
     }
 

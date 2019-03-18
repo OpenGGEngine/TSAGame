@@ -60,6 +60,8 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
 
     @Override
     public void update(float delta){
+        if(this.getPosition().y < 1) this.setPositionOffset(this.getPosition().setY(1));
+
         Vector3f vel = this.getRotation().transform(new Vector3f(control).multiply(speed));
         physics.getEntity().velocity = physics.getEntity().velocity.setX(vel.x).setZ(vel.z);
         sprite.setAngle((float) Math.toDegrees(FastMath.atan2(vel.z, vel.x)));
