@@ -354,7 +354,6 @@ public class Battle implements KeyboardListener {
             setText("You have failed to defeat " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName(), () -> BattleManager.end(false));
         }
 
-        GUIController.deactivateGUI("battle");
     }
 
     public void update(){

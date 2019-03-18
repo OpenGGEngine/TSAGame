@@ -51,6 +51,7 @@ public class BattleManager {
     }
 
     public static void end(boolean success){
+        GUIController.deactivateGUI("battle");
         WorldEngine.useWorld(last);
         WorldEngine.getCurrent().setEnabled(true);
         WorldEngine.getCurrent().getAllDescendants().stream()
