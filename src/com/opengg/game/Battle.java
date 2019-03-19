@@ -38,8 +38,6 @@ public class Battle implements KeyboardListener {
 
     Item selectedItem;
 
-    AtomicBoolean done = new AtomicBoolean(true);
-
     ItemEffect i = new ItemEffect();
 
     boolean freeze = false;
@@ -213,7 +211,7 @@ public class Battle implements KeyboardListener {
         int counter = 0;
         for(var item : items){
 
-            var holder = new GUIGroup(new Vector2f(0, 0.35f - (counter * 0.02f)));
+            var holder = new GUIGroup(new Vector2f(0, 0.35f - (counter * 0.03f)));
 
             String value = item.x.displayName + (item.x.type == Item.ItemType.ITEM ? " x " + item.y : "");
 
@@ -402,6 +400,7 @@ public class Battle implements KeyboardListener {
     }
 
     public void end(boolean success){
+        updateSubMenus();
         if(success){
             Player.PLAYER.exp += 2;
             int diff = Player.PLAYER.exp - Player.PLAYER.expNextLevel;
@@ -439,12 +438,6 @@ public class Battle implements KeyboardListener {
             }else{
                 freeze=true;
             }
-            /*if(onComplete != null && infoBox.isComplete()){
-                var currentRun = onComplete;
-                onComplete.run();
-                if(currentRun == onComplete)
-                    onComplete = null;
-            }*/
         }
     }
 

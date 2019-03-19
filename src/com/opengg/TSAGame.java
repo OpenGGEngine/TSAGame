@@ -10,9 +10,7 @@ import com.opengg.core.engine.BindController;
 import com.opengg.core.engine.GGApplication;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.engine.Resource;
-import com.opengg.core.gui.GUI;
-import com.opengg.core.gui.GUIController;
-import com.opengg.core.gui.GUITexture;
+import com.opengg.core.gui.*;
 import com.opengg.core.io.ControlType;
 import com.opengg.core.math.Quaternionf;
 import com.opengg.core.math.Vector2f;
@@ -87,8 +85,16 @@ public class TSAGame extends GGApplication {
         ShaderController.setUniform("invertMultiplier", 0);
 
         GUI blackout = new GUI();
+        GUIButton start = new GUIButton(new Vector2f(0,0),new Vector2f(0.2f,0.3f), Texture.ofColor(Color.BLUE));
         blackout.addItem("tex", new GUITexture(Texture.ofColor(Color.BLACK, 1), new Vector2f(0, 0), new Vector2f(1, 1)).setLayer(0.5f));
-
+        GUITextBox box = new GUITextBox(new Vector2f(0.25f,0), new Vector2f(0.5f,0.2f))
+                .setText("")
+                .setBackground(Texture.ofColor(Color.BLACK, 0.5f))
+                .setSpeed(1/60f)
+                .setTextSize(0.12f)
+                .setMargin(0.03f)
+                .setScrollMode(GUITextBox.ScrollMode.SPEEDABLE_SCROLL)
+                .setFont(Resource.getTruetypeFont("consolas.ttf"));
         GUIController.addAndUse(blackout, "black");
 
         BindController.addBind(ControlType.KEYBOARD, "forward", KEY_W);
@@ -105,6 +111,8 @@ public class TSAGame extends GGApplication {
                     .filter(c -> c.getName().equals("spawn"))).findAny().get();
 
             Animation anim = new Animation(3, false);
+            //new DialogueSequence((InteractableAI) WorldEngine.getCurrent().find("workerbee0")).start();
+
             anim.addStaticEvent(Animation.AnimationStage.createStaticStage(0, 3,
                     d -> Texture.ofColor(Color.BLACK, (float) ((float) 1 - (d / 3))),
                     t -> ((GUITexture) GUIController.get("black").getRoot().getItem("tex")).setTexture(t)));
@@ -114,7 +122,7 @@ public class TSAGame extends GGApplication {
             });
 
             AnimationManager.register(anim);
-            anim.start();
+            //anim.start();
         } catch (NullPointerException e) {
             GGConsole.error("Failed to find world!");
         }
