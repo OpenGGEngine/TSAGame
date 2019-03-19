@@ -7,15 +7,12 @@ import com.opengg.core.io.FileStringLoader;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.util.StringUtil;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class QuestManager {
-    public static final HashMap<String, Quest> quests = new HashMap<>();
+    public static final HashMap<String, Quest> quests = new LinkedHashMap<>();
 
     private final static Pattern nodePattern = Pattern.compile("\\[(.*?)]", Pattern.DOTALL|Pattern.MULTILINE);
     private final static Pattern subPattern = Pattern.compile("\\{(.*?)}", Pattern.DOTALL|Pattern.MULTILINE);

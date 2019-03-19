@@ -6,7 +6,7 @@
 
     {
         name=talkToBee;
-        displayName=Talk to worker bee about your situation;
+        displayName=Talk to worker bee;
     }
 
     {

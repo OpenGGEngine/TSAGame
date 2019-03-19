@@ -53,7 +53,7 @@ public class EnemySpawner extends Component {
     }
 
     @Override
-    public void onWorldEnable(){
+    public void onEnable(){
         IntStream.range(currentSpawns.size(), amount)
                 .mapToDouble(i -> (i / (float)amount) * 2 * FastMath.PI)
                 .mapToObj(d -> new Vector3f(FastMath.sin((float) d) * 5 + new Random().nextFloat()*4, 0, FastMath.cos((float) d) * 5 + new Random().nextFloat()*4))

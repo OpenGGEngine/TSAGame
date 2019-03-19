@@ -11,7 +11,7 @@ public class SwitchComponent extends Component {
     private boolean state = false;
     private ModelComponent model;
     public String name;
-    
+
     public SwitchComponent(String name,Model m){
         this.name = name;
         model = new ModelComponent(m);
