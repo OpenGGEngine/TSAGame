@@ -15,6 +15,7 @@ import com.opengg.game.CharacterManager;
 import com.opengg.game.Player;
 import com.opengg.game.Quest;
 import com.opengg.game.QuestManager;
+import com.opengg.gui.GameMenu;
 
 import java.awt.*;
 
@@ -60,6 +61,8 @@ public class DialogueSequence implements KeyboardListener {
         DialogueManager.setCurrent(this);
 
         ai.setInDialogue(true);
+        GameMenu.setEnabled(false);
+        GameMenu.dialogDisable = true;
     }
 
     public void update(float delta){
@@ -86,6 +89,7 @@ public class DialogueSequence implements KeyboardListener {
         DialogueManager.setCurrent(null);
 
         ai.setInDialogue(false);
+        GameMenu.dialogDisable = false;
     }
 
     public void enableNode(String next){

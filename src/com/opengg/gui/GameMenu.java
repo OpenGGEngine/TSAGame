@@ -34,6 +34,7 @@ public class GameMenu {
     static int pointer = 0;
 
     static boolean active = false;
+    public static boolean dialogDisable = false;
 
     public static void initialize(){
         KeyboardController.addKeyboardListener(new InputListener());
@@ -221,12 +222,14 @@ public class GameMenu {
 
         @Override
         public void keyPressed(int key) {
-            if(key == Key.KEY_ESCAPE) setEnabled(!active);
+            if(!dialogDisable) {
+                if (key == Key.KEY_ESCAPE) setEnabled(!active);
 
-            if(!active) return;
+                if (!active) return;
 
-            if(key == Key.KEY_DOWN) pointer++;
-            if(key == Key.KEY_UP && pointer != 0) pointer--;
+                if (key == Key.KEY_DOWN) pointer++;
+                if (key == Key.KEY_UP && pointer != 0) pointer--;
+            }
         }
 
         @Override

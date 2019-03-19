@@ -15,6 +15,7 @@ import com.opengg.core.render.texture.Texture;
 import com.opengg.core.util.ArrayUtil;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.components.CameraComponent;
+import com.opengg.gui.GameMenu;
 
 import java.awt.Color;
 import java.util.*;
@@ -57,6 +58,8 @@ public class Battle implements KeyboardListener {
     }
 
     public void start(){
+        GameMenu.dialogDisable = true;
+        GameMenu.setEnabled(false);
         KeyboardController.addKeyboardListener(this);
         info.allies.add("player0");
         statusEffects.put("player0",new HashSet<>());
@@ -406,6 +409,7 @@ public class Battle implements KeyboardListener {
                         info.allies.forEach(a -> heal(CharacterManager.getExisting(a), effect.value));
                     break;
                 case "poison":
+                    if(statusEffects.containsKey(enemy.getId()))
                     statusEffects.get(enemy.getId()).add("poison");
                     return;
 
@@ -469,6 +473,8 @@ public class Battle implements KeyboardListener {
             setText("You have failed to defeat " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName(), () -> BattleManager.end(false));
             hackyGarbage.add(() -> BattleManager.end(false));
         }
+        statusEffects.clear();
+        GameMenu.dialogDisable = false;
 
     }
 

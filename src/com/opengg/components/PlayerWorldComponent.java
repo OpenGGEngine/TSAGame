@@ -105,58 +105,62 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
 
     @Override
     public void onAction(Action action) {
-        if(action.type == ActionType.PRESS){
-            switch(action.name){
-                case "forward":
-                    step.play();
+            if (action.type == ActionType.PRESS) {
+                switch (action.name) {
+                    case "forward":
+                        step.play();
 
-                    control.z -= 1;
-                    break;
-                case "backward":
-                    step.play();
+                        control.z -= 1;
+                        break;
+                    case "backward":
+                        step.play();
 
-                    control.z += 1;
-                    break;
-                case "left":            step.play();
+                        control.z += 1;
+                        break;
+                    case "left":
+                        step.play();
 
-                    control.x -= 1;
-                    break;
-                case "right":            step.play();
+                        control.x -= 1;
+                        break;
+                    case "right":
+                        step.play();
 
-                    control.x += 1;
-                    break;
-                case "up":
-                    physics.getEntity().velocity = physics.getEntity().velocity.setY(5);
-                    break;
-                case "interact":
-                    for(var component : getWorld().getAllDescendants()){
-                        if(component instanceof InteractableAI) {
-                            var ai = (InteractableAI) component;
-                            if (ai.allowInteraction()) {
-                                if (ai.getPosition().distanceTo(this.getPosition()) < 3f) {
-                                    new DialogueSequence(ai).start();
+                        control.x += 1;
+                        break;
+                    case "up":
+                        if(FastMath.isEqual(physics.getEntity().velocity.y ,0))
+                        physics.getEntity().velocity = physics.getEntity().velocity.setY(4);
+                        break;
+                    case "interact":
+                        for (var component : getWorld().getAllDescendants()) {
+                            if (component instanceof InteractableAI) {
+                                var ai = (InteractableAI) component;
+                                if (ai.allowInteraction()) {
+                                    if (ai.getPosition().distanceTo(this.getPosition()) < 3f) {
+                                        new DialogueSequence(ai).start();
+                                    }
                                 }
                             }
                         }
-                    }
-                    break;
-            }
-        }else{
-            switch(action.name){
-                case "forward":
-                    control.z += 1;
-                    break;
-                case "backward":
-                    control.z -= 1;
-                    break;
-                case "left":
-                    control.x += 1;
-                    break;
-                case "right":
-                    control.x -= 1;
-                    break;
+                        break;
+                }
+            } else {
+                switch (action.name) {
+                    case "forward":
+                        control.z += 1;
+                        break;
+                    case "backward":
+                        control.z -= 1;
+                        break;
+                    case "left":
+                        control.x += 1;
+                        break;
+                    case "right":
+                        control.x -= 1;
+                        break;
 
+                }
             }
-        }
+
     }
 }
