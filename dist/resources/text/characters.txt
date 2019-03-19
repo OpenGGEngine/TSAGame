@@ -63,7 +63,7 @@
     name=beaver;
     displayName=Beaver;
 
-    health=50;
+    health=30;
 
     hostile=false;
 

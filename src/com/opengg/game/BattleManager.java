@@ -4,6 +4,8 @@ import com.opengg.TSAGame;
 import com.opengg.components.WorldAI;
 import com.opengg.core.animation.Animation;
 import com.opengg.core.animation.AnimationManager;
+import com.opengg.core.audio.Soundtrack;
+import com.opengg.core.audio.SoundtrackHandler;
 import com.opengg.core.gui.GUIController;
 import com.opengg.core.gui.GUITexture;
 import com.opengg.core.math.FastMath;
@@ -17,12 +19,18 @@ import java.awt.*;
 public class BattleManager {
     private static Battle current;
     private static World last;
+    private static Soundtrack lasts;
 
     public static void initialize(){
 
     }
 
     public static void runBattle(BattleInfo info){
+        lasts = SoundtrackHandler.getCurrent();
+        var sound = new Soundtrack();
+        sound.addSong("battle.ogg");
+        sound.play();
+        SoundtrackHandler.setSoundtrack(sound);
         Animation animation = new Animation(3.5, false);
         WorldEngine.getCurrent().setEnabled(false);
         animation.addStaticEvent(Animation.AnimationStage.createStaticStage(0,1.5,
@@ -51,6 +59,7 @@ public class BattleManager {
     }
 
     public static void end(boolean success){
+        SoundtrackHandler.setSoundtrack(lasts);
         GUIController.deactivateGUI("battle");
         WorldEngine.useWorld(last);
         WorldEngine.getCurrent().setEnabled(true);
