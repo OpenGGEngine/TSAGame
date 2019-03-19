@@ -154,8 +154,44 @@ We'll be glad to help in any way we can, but none of
 Really? We will forever be in your debt. To get there,
 simply go out through the western road. You should be
 able to see it right after leaving the palace.
-Come talk to me after you defeat the mole
+Come talk to me after you defeat the mole!
 {quest;killMole}
+{setNext;postMole}
+
+]
+
+[
+{name;postMole}
+Oh, you're back already!
+{next;goodMole;badMole;killMole;goToMole}
+
+]
+
+[
+{name;badMole}
+I wish we could help you with the mole, but we're
+just not equipped for it.
+
+Come back once you've been able to clear out that cave!
+]
+
+[
+{name;goodMole}
+Thank you so much Simon! I know this isn't it for you,
+but your victory today has helped us out greatly.
+{next;goodMole2}
+]
+
+[
+{name;goodMole2}
+I'll be sure to tell you if we learn any more about
+other parts of the Dimensional Shield
+{next;goodMole3}
+]
+
+[
+{name;goodMole3}
+THANK YOU FOR PLAYING PART 1 OF SIMON'S QUEST: BETWEEN WORLDS!
 ]
 
 [

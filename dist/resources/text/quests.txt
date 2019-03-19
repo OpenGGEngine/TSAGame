@@ -51,8 +51,8 @@
      }
 
      {
-             name=defeatMole;
-             displayName=Defeat Master Mole;
+             name=postDiscuss;
+             displayName=Return to Queen Bee;
              requirements=goToMole;
          }
 ]

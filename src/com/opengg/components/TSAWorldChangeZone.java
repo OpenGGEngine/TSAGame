@@ -1,31 +1,32 @@
 package com.opengg.components;
 
 import com.opengg.TSAGame;
+import com.opengg.core.engine.OpenGG;
+import com.opengg.core.math.Vector3f;
 import com.opengg.core.physics.collision.AABB;
+import com.opengg.core.physics.collision.Floor;
 import com.opengg.core.util.GGInputStream;
 import com.opengg.core.util.GGOutputStream;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.components.WorldChangeZone;
+import com.opengg.core.world.components.physics.CollisionComponent;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 public class TSAWorldChangeZone extends WorldChangeZone {
     private String target;
 
     public TSAWorldChangeZone(){
-        this.target = "";
+        super("", new AABB(2,2,2));
+
         this.setExitCondition(i -> i.data instanceof PlayerWorldComponent);
     }
 
     public TSAWorldChangeZone(String world, String target){
-        super(world, new AABB(2,2,2));
+        this();
         this.target = target;
-
-        this.setOnExit((__) -> {
-            ((WorldEntryZone) WorldEngine.getCurrent().find(target)).spawn();
-            TSAGame.lastLoad = ((WorldEntryZone) WorldEngine.getCurrent().find(target));
-        });
-        this.setExitCondition(i -> i.data instanceof PlayerWorldComponent);
+        this.setWorld(world);
     }
 
     public void setTarget(String target) {
@@ -34,6 +35,40 @@ public class TSAWorldChangeZone extends WorldChangeZone {
 
     public String getTarget(){
         return target;
+    }
+
+    public void setExitThing(String targeto){
+        this.setOnExit((__) -> {
+            ((WorldEntryZone) WorldEngine.getCurrent().find(targeto)).spawn();
+            TSAGame.lastLoad = ((WorldEntryZone) WorldEngine.getCurrent().find(targeto));
+            WorldEngine.getCurrent().remove(WorldEngine.getCurrent().getAllDescendants().stream()
+                    .filter(c -> c instanceof WorldEnemy).map(c -> (WorldEnemy)c)
+                    .filter(c -> c.getCharacterType().equals("default"))
+                    .findAny()
+                    .orElse(null));
+            OpenGG.asyncExec(() -> {
+                var colls = WorldEngine.getCurrent().getAllDescendants()
+                        .stream()
+                        .filter(c -> c instanceof CollisionComponent)
+                        .map(c -> (CollisionComponent)c)
+                        .collect(Collectors.toList());
+
+                pre:
+                for (var obj : WorldEngine.getCurrent().getSystem().getColliders()) {
+                    for (var collider : colls) {
+                        if(obj.getColliders().size() == 2 && obj.getColliders().get(1) instanceof Floor) continue pre;
+                        if (collider.getColliderGroup() == obj) {
+                            System.out.println("Found match");
+                            continue pre;
+                        } else {
+                            //OpenGG.asyncExec(() -> WorldEngine.getCurrent().getSystem().removeCollider(obj));
+                        }
+                    }
+                }
+
+            });
+
+        });
     }
 
     @Override
@@ -47,7 +82,6 @@ public class TSAWorldChangeZone extends WorldChangeZone {
         super.deserialize(in);
         target = in.readString();
         this.setBox(new AABB(3,3,3));
-
-        this.setOnExit((__) -> ((WorldEntryZone) WorldEngine.getCurrent().find(target)).spawn());
+        setExitThing(target);
     }
 }

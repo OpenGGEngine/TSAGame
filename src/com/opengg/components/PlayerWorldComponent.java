@@ -12,6 +12,7 @@ import com.opengg.core.physics.collision.ConvexHull;
 import com.opengg.core.world.Action;
 import com.opengg.core.world.ActionType;
 import com.opengg.core.world.Actionable;
+import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.components.ActionTransmitterComponent;
 import com.opengg.core.world.components.CameraComponent;
 import com.opengg.core.world.components.ControlledComponent;
@@ -21,6 +22,7 @@ import com.opengg.dialogue.DialogueSequence;
 import com.opengg.game.Player;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlayerWorldComponent extends ControlledComponent implements Actionable {
     SpriteRenderComponent sprite;
@@ -70,12 +72,29 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
         physics.getEntity().velocity = physics.getEntity().velocity.setX(vel.x).setZ(vel.z);
         sprite.setAngle((float) Math.toDegrees(FastMath.atan2(vel.z, vel.x)));
 
+
+
         if(vel.length() != 0){
             sprite.setAnimToUse("walk");
         }
         else{
             sprite.setAnimToUse("idle");
             step.stop();
+        }
+
+        boolean inZone = false;
+        for(var comp : WorldEngine.getCurrent().getAllDescendants().stream().filter(c -> c instanceof FloorComponent).map(c -> (FloorComponent)c).collect(Collectors
+                .toList())){
+            if(!comp.getRotation().toEuler().equals(new Vector3f())) continue;
+            AABB aabb = new AABB(new Vector3f(1,100,1));
+            aabb.setScale(comp.getScale());
+            aabb.setPosition(comp.getPosition());
+            aabb.recalculate();
+            if(aabb.isColliding(this.getPosition())) inZone = true;
+        }
+
+        if(!inZone){
+            this.setPositionOffset(this.getPosition().multiply(0.8f));
         }
     }
 

@@ -44,7 +44,7 @@ public class BattleManager {
                 .setOnComplete(() -> {
                     WorldLoader.keepWorld(last = WorldEngine.getCurrent());
                     WorldEngine.useWorld(WorldLoader.loadWorld(info.battleWorld));
-
+                    ((GUITexture)GUIController.get("black").getRoot().getItem("tex")).setTexture(Texture.ofColor(Color.WHITE,0));
                     current = new Battle(info);
                     current.start();
                 }));

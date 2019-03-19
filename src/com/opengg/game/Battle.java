@@ -32,6 +32,7 @@ public class Battle implements KeyboardListener {
     GUIGroup abilityMenu;
     GUIGroup generalMenu;
     GUIGroup enemyMenu;
+    GUIGroup allyMenu;
     GUITextBox infoBox;
 
     GUIGroup infoMenu;
@@ -80,11 +81,14 @@ public class Battle implements KeyboardListener {
         battleGUI.addItem("menu", battleMenu = new GUIGroup(new Vector2f(0.03f, 0.6f)));
         battleGUI.addItem("info", infoMenu = new GUIGroup(new Vector2f(0.28f, 0.8f)));
         battleGUI.addItem("enemies", enemyMenu = new GUIGroup(new Vector2f(0.8f, 0.7f)));
+        battleGUI.addItem("allies", allyMenu = new GUIGroup(new Vector2f(0.05f, 0.05f)));
+
         infoMenu.addItem("background",
                 new GUITexture(Texture.ofColor(Color.GRAY, 0.8f), new Vector2f(-0.015f,-0.02f), new Vector2f(0.4f, 0.2f)).setLayer(-0.5f));
         infoMenu.setEnabled(false);
 
         enemyMenu.addItem("sublist", new GUIGroup());
+        allyMenu.addItem("sublist", new GUIGroup());
 
         battleMenu.addItem("background",
                 new GUITexture(Texture.ofColor(Color.GRAY, 0.8f), new Vector2f(-0.015f,-0.02f), new Vector2f(0.22f, 0.4f)).setLayer(-0.5f));
@@ -169,10 +173,15 @@ public class Battle implements KeyboardListener {
                 new GUITexture(Texture.ofColor(Color.GRAY, 0.8f),
                         new Vector2f(-0.015f,-0.02f), new Vector2f(0.3f, 0.12f * info.enemies.size())).setLayer(-0.5f));
 
+        allyMenu.addItem("background",
+                new GUITexture(Texture.ofColor(Color.GRAY, 0.8f),
+                        new Vector2f(-0.015f,-0.02f), new Vector2f(0.13f, 0.12f * info.enemies.size())).setLayer(-0.5f));
+
         populateSubMenu(itemMenu, items);
         populateSubMenu(abilityMenu, abilities);
 
         updateEnemies();
+        updateAllies();
     }
 
     public void updateEnemies(){
@@ -200,6 +209,35 @@ public class Battle implements KeyboardListener {
                     new Vector2f(0.1f,0.06f), () -> playerAttack( realEnemy, selectedItem)));
 
             list.addItem(realEnemy.getName(), holder);
+
+        }
+    }
+
+    public void updateAllies(){
+        var list = (GUIGroup) allyMenu.getItem("sublist");
+        list.clear();
+
+        int counter = 0;
+        for(var ally : info.allies){
+            var realAlly = CharacterManager.getExisting(ally);
+
+            var holder = new GUIGroup(new Vector2f(0, 0.05f * counter));
+
+            holder.addItem("name",
+                    new GUIText(Text.from(realAlly.getDisplayName()).size(0.1f), Resource.getTruetypeFont(FONT), new Vector2f(0,0.03f)));
+
+            var string = "HP: " + realAlly.getHealth() + "/" + realAlly.getMaxHealth();
+            /*holder.addItem("data",
+                    new GUIText(Text.from(string).size(0.04f), Resource.getTruetypeFont(FONT), new Vector2f(0,0.0f)));*/
+
+            holder.addItem("bar",
+                    new GUIProgressBar(new Vector2f(0,0), new Vector2f(0.1f,0.01f), Color.red, Color.black).setPercent(realAlly.getHealth()/realAlly.getMaxHealth()));
+
+            holder.addItem("button",
+                    new GUIButton(new Vector2f(-0.005f,-0.005f),
+                            new Vector2f(0.1f,0.06f), () -> playerAttack( realAlly, selectedItem)));
+
+            list.addItem(realAlly.getName(), holder);
 
         }
     }
@@ -255,7 +293,6 @@ public class Battle implements KeyboardListener {
     }
     public void runStatusEffects(){
         if(statusEffects.isEmpty()){
-            System.out.println("asdf");
             infoBox.setText("What is your next move?");
             battleMenu.setEnabled(true);
             updateSubMenus();
@@ -337,9 +374,13 @@ public class Battle implements KeyboardListener {
         battleMenu.setEnabled(false);
         updateSubMenus();
         freeze = false;
+        fighterRenderers.get((String)info.allies.toArray()[0]).setAnimToUse("attack");
         setText("You used " + attack.displayName + "!", () -> {
+
         });
-        hackyGarbage.add(()->{runAIs();});
+        hackyGarbage.add(()->{
+            fighterRenderers.get((String)info.allies.toArray()[0]).setAnimToUse("idle");
+            runAIs();});
 
     }
 
@@ -396,7 +437,6 @@ public class Battle implements KeyboardListener {
                     end(false);
                 }else{
                     info.allies.remove(target.getId());
-
                 }
             }
         }

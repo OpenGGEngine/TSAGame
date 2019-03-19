@@ -47,6 +47,7 @@ public class TSAGame extends GGApplication {
         wininfo.width = 1280;
         wininfo.height = 720;
         wininfo.vsync = true;
+        wininfo.resizable = true;
         wininfo.name = "TSA Game";
         OpenGG.initialize(INSTANCE = new TSAGame(), wininfo);
     }
@@ -57,7 +58,7 @@ public class TSAGame extends GGApplication {
 
     @Override
     public void setup() {
-        this.applicationName = "TSA Game";
+        this.applicationName = "Simon's Quest: Between Worlds";
         GGConsole.log("Initializing TSA Game submanagers");
 
         StringManager.initialize();
@@ -87,14 +88,7 @@ public class TSAGame extends GGApplication {
         GUI blackout = new GUI();
         GUIButton start = new GUIButton(new Vector2f(0,0),new Vector2f(0.2f,0.3f), Texture.ofColor(Color.BLUE));
         blackout.addItem("tex", new GUITexture(Texture.ofColor(Color.BLACK, 1), new Vector2f(0, 0), new Vector2f(1, 1)).setLayer(0.5f));
-        GUITextBox box = new GUITextBox(new Vector2f(0.25f,0), new Vector2f(0.5f,0.2f))
-                .setText("")
-                .setBackground(Texture.ofColor(Color.BLACK, 0.5f))
-                .setSpeed(1/60f)
-                .setTextSize(0.12f)
-                .setMargin(0.03f)
-                .setScrollMode(GUITextBox.ScrollMode.SPEEDABLE_SCROLL)
-                .setFont(Resource.getTruetypeFont("consolas.ttf"));
+
         GUIController.addAndUse(blackout, "black");
 
         BindController.addBind(ControlType.KEYBOARD, "forward", KEY_W);
@@ -114,7 +108,6 @@ public class TSAGame extends GGApplication {
                     .filter(c -> c.getName().equals("spawn"))).findAny().get();
 
             Animation anim = new Animation(3, false);
-            //new DialogueSequence((InteractableAI) WorldEngine.getCurrent().find("workerbee0")).start();
 
             anim.addStaticEvent(Animation.AnimationStage.createStaticStage(0, 3,
                     d -> Texture.ofColor(Color.BLACK, (float) ((float) 1 - (d / 3))),
@@ -125,7 +118,7 @@ public class TSAGame extends GGApplication {
             });
 
             AnimationManager.register(anim);
-            //anim.start();
+            anim.start();
         } catch (NullPointerException e) {
             GGConsole.error("Failed to find world!");
         }
@@ -142,8 +135,6 @@ public class TSAGame extends GGApplication {
 
         QuestManager.beginQuest("goToBeeville");
         Player.PLAYER.getInventory().addAbility("fists");
-
-        //SoundEngine.setGlobalGain(0.0f);
     }
 
     @Override
@@ -155,7 +146,6 @@ public class TSAGame extends GGApplication {
     public void update(float delta) {
         WorldEngine.getCurrent().remove(WorldEngine.getCurrent().getAllDescendants().stream()
                 .filter(c -> c instanceof WorldEnemy).map(c -> (WorldEnemy)c)
-                .peek(c -> System.out.println(c.getCharacterType()))
                 .filter(c -> c.getCharacterType().equals("default"))
                 .findAny()
                 .orElse(null));
