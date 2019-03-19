@@ -68,7 +68,6 @@ Man, I really don't like fighting...
 We gotta go talk to the Queen about this!
 She's in that second building there, the left one.
 She'll fill you in on what's been going on.
-{next;queenGreeting}
 ]
 
 //QUEEN DISCUSSION
@@ -77,6 +76,7 @@ She'll fill you in on what's been going on.
 {name;queenGreeting}
 I've heard the buzz around here that you'd be coming, Simon!
 We heartily welcome you to our village.
+{quest;goToBeeville;say}
 {optionCount;1}
 {option0;queenGreeting2;Thank you, but why does everyone know me around here?}
 ]
@@ -86,16 +86,11 @@ We heartily welcome you to our village.
 Well I think you know the answer to that!
 You're the hero! The one who defeated Emak those long years ago!
 Wait, but then why are you here?
-{next;queenEmakDiscussion}
+{optionCount;1}
+{option0;queenEmakDiscussion2;Wait, where exactly am I?}
 ]
 
-[
-{name;queenEmakDiscussion}
-Oh no, does that mean what I think it does?
-Did Emak complete his ultimate weapon?
-{optionCount;1}
-{option0;queenEmakDiscussion2;Unfortunately yes. Wait, where exactly am I?}
-]
+
 
 [
 {name;queenEmakDiscussion2}
@@ -114,12 +109,86 @@ have been strange around here for a while.
 
 [
 {name;queenEmakDiscussion4}
-AA
+And now that you're here...
+Well, anyways, how exactly did you end up here?
+{optionCount;1}
+{option0;queenEmakDiscussion5;Emak was able to put together the Dimensional Sword}
+]
+
+[
+{name;queenEmakDiscussion5}
+Wait, is that what brought you here? I thought that was a myth!
+So I assume you're trying to find a way back to your dimension?
+{optionCount;1}
+{option0;queenEmakDiscussion6;There's no point, he's unfightable now that he has that weapon}
+]
+
+[
+{name;queenEmakDiscussion6}
+Well, Simon, we may be able to help each other then.
+I've heard stories of a great shield, capable of stopping
+attacks from the Dimensional Sword.
+{next;queenEmakDiscussion7}
+]
+
+[
+{name;queenEmakDiscussion7}
+Unfortunately it's being held by 3 of Emak's henchmen. However, one of my
+drones found some activity in a nearby cave, and we think that one of these
+pieces may be inside, guarded by the evil Master Mole.
+{next;queenEmakDiscussion8}
+]
+
+[
+{name;queenEmakDiscussion8}
+Could you help our town get rid of this looming threat? We'll be glad to
+help in any way we can, but none of us can go in there alone.
+{optionCount;1}
+{option0;queenEmakDiscussion9;Sure, I'll see what I can do}
+]
+
+[
+{name;queenEmakDiscussion9}
+Really? We will forever be in your debt. To get there, simply go out
+through the western road. You should be able to see it right after leaving
+the palace.
+{quest;boss}
+]
+
+[
+{name;welcom}
+Welcome to the village, Simon!
+]
+
+[
+{name;haveYouSeenDungeon}
+Have you seen that cave? Man, it really must suck to be the poor
+lad responsible for clearing that out...
+
+
+Oh, hey Simon!
 ]
 
 
+[
+{name;gettingFlower}
+I'm just out here getting some flowers. Still kinda unsettling to have
+that cave there...
+What could possibly be inside...
+]
+
+[
+{name;happyToBeHere}
+Honestly, that cave doesn't even bother me! I'm just happy to be
+ here getting flowers!
+]
 
 
+[
+{name;passageBlocked}
+Sorry, Simon, the Queen requested that we block off this
+part of the road due to the Emak threat
+]
 //ALL OF THESE ARE TEST
 [
 {name;bird}

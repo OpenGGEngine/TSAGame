@@ -111,7 +111,7 @@ public class SpriteRenderComponent extends RenderComponent {
         if(textures.containsKey(animToUse))
             current = textures.get(animToUse);
         else
-            current = forwards ? textures.get("front_" + animToUse) : textures.get("back_" + animToUse);
+            current = forwards ? textures.get("front" + animToUse) : textures.get("back" + animToUse);
 
         current.update(delta);
     }

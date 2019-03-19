@@ -22,6 +22,7 @@ public class TSAWorldChangeZone extends WorldChangeZone {
         this.target = target;
 
         this.setOnExit((__) -> {
+            WorldEngine.getCurrent().remove(WorldEngine.getCurrent().getAllDescendants().stream().filter(c -> c instanceof WorldEnemy).map(c -> (WorldEnemy)c).filter(c -> c.characterType.equals("default")).findAny().orElse(null));
             ((WorldEntryZone) WorldEngine.getCurrent().find(target)).spawn();
             TSAGame.lastLoad = ((WorldEntryZone) WorldEngine.getCurrent().find(target));
         });

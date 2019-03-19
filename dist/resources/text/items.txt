@@ -63,6 +63,27 @@
 ]
 
 [
+    name=bone;
+    displayName=Bone;
+    desc=Part of the skeleton;
+
+    unique=false;
+    usable=true;
+
+    sprite=items/bone.png;
+
+    type=item;
+
+    targeted=true;
+
+    {
+        name=damage;
+        value=7;
+    }
+
+]
+
+[
     name=knife;
     displayName=Knife;
     desc=Useful for stabbing people and food;

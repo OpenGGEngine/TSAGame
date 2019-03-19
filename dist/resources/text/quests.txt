@@ -6,18 +6,7 @@
 
     {
         name=talkToBee;
-        displayName=Talk to worker bee about your situation
-    }
-
-    {
-        name=fightFirstEnemy;
-        displayName=Defeat the <probably beaver> blocking your path;
-
-        completionType=enemy;
-
-        completionValue=wasp;
-
-        requirements=talkToBee;
+        displayName=Talk to worker bee about your situation;
     }
 
     {
@@ -26,12 +15,47 @@
 
         completionType=world;
 
-        completionValue=beetown;
+        completionValue=beevillage.bwf;
 
-        requirements=fightFirstEnemy;
+        requirements=talkToBee;
+    }
+
+    {
+        name=talkToQueen;
+        displayName=Talk to the Queen Bee;
+        requirements=followToTown;
     }
 ]
 
+
+[
+    name=killMole;
+    displayName=Defeat Master Mole;
+
+    firstState=goToDungeon;
+
+    {
+        name=goToDungeon;
+        displayName=Head to the caves out west;
+
+        completionType=world;
+        completionValue=dungeon1.bwf;
+    }
+
+    {
+            name=goToMole;
+            displayName=Reach Master Mole's lair;
+            requirements=goToDungeon;
+            completionType=world;
+                    completionValue=bosslair.bwf;
+     }
+
+     {
+             name=defeatMole;
+             displayName=Defeat Master Mole;
+             requirements=goToMole;
+         }
+]
 
 [
     name=findSad;

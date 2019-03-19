@@ -48,7 +48,7 @@ public class TSAGame extends GGApplication {
         var wininfo = new WindowInfo();
         wininfo.width = 1280;
         wininfo.height = 720;
-        wininfo.vsync = false;
+        wininfo.vsync = true;
         wininfo.name = "TSA Game";
         OpenGG.initialize(INSTANCE = new TSAGame(), wininfo);
     }
@@ -99,7 +99,10 @@ public class TSAGame extends GGApplication {
         BindController.addBind(ControlType.KEYBOARD, "interact", KEY_ENTER);
 
         try {
+
             WorldEngine.useWorld(WorldLoader.loadWorld("flowerforest.bwf"));
+            BindController.setEnabled(false);
+
             lastLoad = (WorldEntryZone) (WorldEngine.getCurrent().getAllDescendants().stream()
                     .filter(c -> c instanceof WorldEntryZone)
                     .filter(c -> c.getName().equals("spawn"))).findAny().get();
@@ -125,9 +128,6 @@ public class TSAGame extends GGApplication {
                 .map(Component::getPosition)
                 .findAny().orElse(new Vector3f(0, 0, 0)))));
 
-        BindController.setEnabled(false);
-
-        WorldEngine.getCurrent().attach(new EnemySpawner("queenaidbee", 1));
 
 
         WindowController.getWindow().setCursorLock(false);
@@ -135,7 +135,7 @@ public class TSAGame extends GGApplication {
         QuestManager.beginQuest("goToBeeville");
         Player.PLAYER.getInventory().addAbility("fists");
 
-        SoundEngine.setGlobalGain(0.0f);
+        //SoundEngine.setGlobalGain(0.0f);
     }
 
     @Override

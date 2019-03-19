@@ -1,5 +1,6 @@
 package com.opengg.components;
 
+import com.opengg.core.engine.OpenGG;
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.util.GGInputStream;
@@ -48,7 +49,7 @@ public class EnemySpawner extends Component {
 
     @Override
     public void update(float delta){
-        currentSpawns.removeIf(spawn -> !((WorldAI) WorldEngine.getCurrent().find(spawn)).isLiving());
+        //currentSpawns.removeIf(spawn -> !((WorldAI) WorldEngine.getCurrent().find(spawn)).isLiving());
     }
 
     @Override
@@ -58,7 +59,7 @@ public class EnemySpawner extends Component {
                 .mapToObj(d -> new Vector3f(FastMath.sin((float) d) * 5 + new Random().nextFloat()*4, 0, FastMath.cos((float) d) * 5 + new Random().nextFloat()*4))
                 .map(v -> new WorldEnemy(CharacterManager.generate(character)).setPositionOffset(v))
                 .peek(c -> c.setPositionOffset(c.getPosition().add(this.getPosition())))
-                .peek(c -> WorldEngine.getCurrent().attach(c))
+                .peek(c -> OpenGG.asyncExec(() -> this.getWorld().attach(c)))
                 .forEach(c -> currentSpawns.add(((WorldAI) c).character));
     }
 

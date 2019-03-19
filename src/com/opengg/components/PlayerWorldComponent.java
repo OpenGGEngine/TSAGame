@@ -1,6 +1,8 @@
 package com.opengg.components;
 
 import com.opengg.core.Configuration;
+import com.opengg.core.audio.Sound;
+import com.opengg.core.engine.Resource;
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.math.Vector3fm;
@@ -25,8 +27,10 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
     PhysicsComponent physics;
     private Vector3fm control = new Vector3fm();
     float speed = 4;
+    Sound step;
 
     public PlayerWorldComponent(){
+        step = new Sound(Resource.getSoundData("footstep.ogg"));
         var size = Player.PLAYER.getSize();
 
         sprite = new SpriteRenderComponent(Configuration.get("playerSprite"));
@@ -66,25 +70,40 @@ public class PlayerWorldComponent extends ControlledComponent implements Actiona
         physics.getEntity().velocity = physics.getEntity().velocity.setX(vel.x).setZ(vel.z);
         sprite.setAngle((float) Math.toDegrees(FastMath.atan2(vel.z, vel.x)));
 
-        if(vel.length() != 0) sprite.setAnimToUse("walk");
-        else sprite.setAnimToUse("idle");
+        if(vel.length() != 0){
+            sprite.setAnimToUse("walk");
+        }
+        else{
+            sprite.setAnimToUse("idle");
+            step.stop();
+        }
     }
 
+    @Override
+    public void onDisable(){
+        step.stop();
+    }
 
     @Override
     public void onAction(Action action) {
         if(action.type == ActionType.PRESS){
             switch(action.name){
                 case "forward":
+                    step.play();
+
                     control.z -= 1;
                     break;
                 case "backward":
+                    step.play();
+
                     control.z += 1;
                     break;
-                case "left":
+                case "left":            step.play();
+
                     control.x -= 1;
                     break;
-                case "right":
+                case "right":            step.play();
+
                     control.x += 1;
                     break;
                 case "up":
