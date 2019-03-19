@@ -149,7 +149,7 @@ public class GameMenu {
             var progress = QuestManager.getQuests().values().stream()
                     .filter(q -> q.state == Quest.QuestState.ACTIVE).collect(Collectors.toList());
 
-            pointer = FastMath.clamp(pointer, 0, progress.size()-1);
+            pointer = FastMath.clamp(pointer, 0, Math.max(progress.size()-1,0));
 
             inventoryMenu.setEnabled(false);
             questMenu.setEnabled(true);
@@ -189,7 +189,7 @@ public class GameMenu {
                 i++;
             }
 
-
+            if(progress.isEmpty()) return;
             var selectedQuest = progress.get(pointer);
             description.setText(selectedQuest.desc);
 

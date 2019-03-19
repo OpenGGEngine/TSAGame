@@ -30,6 +30,7 @@ public class WorldAI extends Component {
 
     HashMap<String, String> savedValues = new HashMap<>();
     float speed = 3.5f;
+    float size;
 
     public WorldAI() {
         this.setUpdateDistance(50);
@@ -44,7 +45,7 @@ public class WorldAI extends Component {
 
         characterType = CharacterManager.getExisting(character).getName();
 
-        var size = CharacterManager.getExisting(character).getSize();
+        size = CharacterManager.getExisting(character).getSize();
         sprite.setScaleOffset(size);
 
         physics = new PhysicsComponent();
@@ -148,6 +149,8 @@ public class WorldAI extends Component {
 
         characterType = in.readString();
         character = CharacterManager.generate(characterType);
+        size = CharacterManager.getExisting(character).getSize();
+
         speed = in.readFloat();
     }
 

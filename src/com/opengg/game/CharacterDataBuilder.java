@@ -55,6 +55,30 @@ public class CharacterDataBuilder {
         return this;
     }
 
+    public Inventory getInventory() {
+        return inventory;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public boolean isHostile() {
+        return hostile;
+    }
+
+    public String getSprite() {
+        return sprite;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
     public boolean isUnique() {
         return unique;
     }

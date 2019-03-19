@@ -23,7 +23,7 @@ public class WorldEnemy extends WorldAI {
     @Override
     public void update(float delta){
         super.update(delta);
-        if(this.getPosition().distanceTo(WorldEngine.getCurrent().find("player").getPosition()) < 1f){
+        if(this.getPosition().distanceTo(WorldEngine.getCurrent().find("player").getPosition()) < 1f * size){
             BattleInfo info = new BattleInfo();
             info.enemies.add(this.character);
             info.battleWorld = "battle_" + this.getWorld().getName();

@@ -92,7 +92,6 @@ public class DialogueSequence implements KeyboardListener {
         current = DialogueManager.getNodeByName(next);
 
         pointer = 0;
-
         text.reset();
         text.setText(getText(current));
 

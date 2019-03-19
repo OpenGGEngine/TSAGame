@@ -1,4 +1,4 @@
-COMPILED GGSL ERROR SOURCE: From shader arraytex.frag with error code 0: 0(215) : error C1068: too much data in type constructor
+COMPILED GGSL ERROR SOURCE: From shader terrainmulti.frag with error code 0: 0(75) : error C1503: undefined variable "textureCoords"
 #version 420
 layout(location=0) out vec4 fcolor;
 in vertexData {
@@ -72,13 +72,12 @@ return shadow;
 }else{
 vec4 lightspacePos = (light.perspective * (light.view * vec4(pos, 1.0f)));
 vec3 projCoords = lightspacePos.xyz;
-;
 projCoords = ((projCoords * 0.5f) + 0.5f);
-float closestDepth = texture(shadowmap, projCoords.xy).r;
+float closestDepth = texture(shadowmap, textureCoords).r;
 vec3 lightDir = normalize((light.lightpos.xyz - pos.xyz));
 float bias = max((0.05f * (1.0f - dot(n, lightDir))), 0.005f);
 float shadow = ((((projCoords.z - 0.5f) - bias) > closestDepth) ? 0.0f : 1.0f);
-return shadow;
+return closestDepth;
 }
 ;
 } 
@@ -173,15 +172,22 @@ float cosTheta = max(dot(n, lightDir), 0.0f);
 vec3 fdif = (diffuse * cosTheta);
 float cosAlpha = max(dot(n, halfwayDir), 0.0f);
 vec3 fspec = (specular * pow(cosAlpha, specpow));
-float shadowcover = 1;
+float shadowcover = getShadowCoverage(light);
 vec3 fragColor = ((((fdif + fspec) * attenuation) * shadowcover) * light.color.rgb);
-return fragColor;
+return vec3(shadowcover, shadowcover, shadowcover);
 } 
 
-uniform sampler2DArray anim;
-uniform int layer;
-uniform int invertMultiplier;
+uniform sampler2DArray terrain;
+uniform vec3 scale;
 void main() {
+vec4 blendMapColor = getTex(Ka);
+float backTextureAmount = (1 - ((blendMapColor.r + blendMapColor.b) + blendMapColor.g));
+vec2 tiledMapEditor = vec2((textureCoord.x * scale.x), (textureCoord.y * scale.z));
+vec4 wcolor = (texture(terrain, vec3(tiledMapEditor, 0)) * backTextureAmount);
+vec4 wcolorr = (texture(terrain, vec3(tiledMapEditor, 1)) * blendMapColor.r);
+vec4 wcolorg = (texture(terrain, vec3(tiledMapEditor, 2)) * blendMapColor.g);
+vec4 wcolorb = (texture(terrain, vec3(tiledMapEditor, 3)) * blendMapColor.b);
+vec4 finalColor = (((wcolor + wcolorr) + wcolorg) + wcolorb);
 generatePhongData();
 Material material;
 material.hasnormmap = 0.0f;
@@ -194,25 +200,12 @@ material.ks = vec3(1, 1, 1);
 material.ka = vec3(0, 0, 0);
 material.kd = vec3(0, 0, 0);
 material.ns = 128;
-vec4 colorino = vec4(1, 1, 1, 1);
-if((invertMultiplier == -1)){
-colorino = texture(anim, vec3(vec2((1 - textureCoord.x), textureCoord.y), layer));
-}else{
-colorino = texture(anim, vec3(textureCoord, layer));
-}
-;
-useMaterial(material, colorino);
-if((trans == 0)){
-discard;
-}else{
-}
-;
+useMaterial(material, finalColor);
 vec3 col = ambient;
-col += emmisive;
 for(int i = 0; (i < 1); i++){
 col += getPhongFrom(lights[i]);
 }
 ;
-fcolor = vec4(colorino, trans);
+fcolor = vec4(col, 1);
 } 
 

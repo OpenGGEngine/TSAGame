@@ -10,28 +10,52 @@
     }
 
     {
-        name=fightFirstEnemy;
-        displayName=Fight the enemies;
+        name=followToTown;
+        displayName=Follow worker bee to Bee Village;
 
-        completionType=enemy;
+        completionType=world;
 
-        completionValue=wasp;
+        completionValue=beevillage.bwf;
 
         requirements=talkToBee;
     }
 
     {
-        name=followToTown;
-        displayName=Enter Bee Village;
-
-        completionType=world;
-
-        completionValue=beetown;
-
-        requirements=fightFirstEnemy;
+        name=talkToQueen;
+        displayName=Talk to the Queen Bee;
+        requirements=followToTown;
     }
 ]
 
+
+[
+    name=killMole;
+    displayName=Defeat Master Mole;
+
+    firstState=goToDungeon;
+
+    {
+        name=goToDungeon;
+        displayName=Head to the caves out west;
+
+        completionType=world;
+        completionValue=dungeon1.bwf;
+    }
+
+    {
+            name=goToMole;
+            displayName=Reach Master Mole's lair;
+            requirements=goToDungeon;
+            completionType=world;
+                    completionValue=bosslair.bwf;
+     }
+
+     {
+             name=defeatMole;
+             displayName=Defeat Master Mole;
+             requirements=goToMole;
+         }
+]
 
 [
     name=findSad;

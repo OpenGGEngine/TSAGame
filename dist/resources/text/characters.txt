@@ -1,5 +1,5 @@
 [
-    name=bobomb;
+    name=default;
     displayName=Bob-omb;
 
     health=120;
@@ -60,6 +60,56 @@
 ]
 
 [
+    name=beaver;
+    displayName=Beaver;
+
+    health=50;
+
+    hostile=false;
+
+    sprite=beaver;
+
+    size=1.5;
+
+    {
+        item=scratch;
+    }
+
+    {
+            item=dam;
+            amount=3;
+        }
+]
+
+[
+    name=masterMole;
+    displayName=Master Mole;
+
+    health=80;
+
+    hostile=true;
+
+    sprite=mole;
+
+    size=3;
+
+    {
+            item=spitPoison;
+            amount=2;
+        }
+
+        {
+                    item=tunnelHome;
+                    amount=3;
+                }
+
+        {
+                    item=scratch;
+                }
+]
+
+
+[
     name=queenBee;
     displayName=Queen Bee;
 
@@ -72,3 +122,21 @@
     size=3;
 
 ]
+
+[
+    name=skeleton;
+    displayName=Skeleton;
+
+    health=50;
+
+    hostile=true;
+
+    sprite=skeleton;
+
+    size=1.5;
+
+    {
+        item=bone;
+    }
+]
+

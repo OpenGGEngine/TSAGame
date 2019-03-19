@@ -1,5 +1,6 @@
 package com.opengg.components;
 
+import com.opengg.core.engine.OpenGG;
 import com.opengg.core.math.FastMath;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.util.GGInputStream;
@@ -48,17 +49,31 @@ public class EnemySpawner extends Component {
 
     @Override
     public void update(float delta){
-        currentSpawns.removeIf(spawn -> ((WorldAI) WorldEngine.getCurrent().find(spawn)) == null);
+        //currentSpawns.removeIf(spawn -> !((WorldAI) WorldEngine.getCurrent().find(spawn)).isLiving());
     }
 
     @Override
-    public void onEnable(){
-        IntStream.range(currentSpawns.size(), amount)
+    public void onWorldLoad(){
+        this.getWorld().getAllDescendants()
+                .stream()
+                .filter(c -> c instanceof WorldEnemy)
+                .map(c -> (WorldEnemy)c)
+                .filter(c -> c.getCharacterType().equals(character))
+                .forEach(WorldEngine::markForRemoval);
+        if(amount == 1){
+            if(currentSpawns.isEmpty()){
+                OpenGG.asyncExec(() -> getWorld().attach(new WorldEnemy(CharacterManager.generate(character)).setPositionOffset(this.getPositionOffset())));
+            }
+        }else
+            IntStream.range(currentSpawns.size(), amount)
                 .mapToDouble(i -> (i / (float)amount) * 2 * FastMath.PI)
-                .mapToObj(d -> new Vector3f(FastMath.sin((float) d) * 5 + new Random().nextFloat()*4, 0, FastMath.cos((float) d) * 5 + new Random().nextFloat()*4))
+                .mapToObj(d -> new Vector3f(
+                        FastMath.cos((float) d) * 2 + new Random().nextFloat()*0.2f,
+                        0,
+                        FastMath.cos((float) d) * 2 + new Random().nextFloat()*0.2f))
                 .map(v -> new WorldEnemy(CharacterManager.generate(character)).setPositionOffset(v))
                 .peek(c -> c.setPositionOffset(c.getPosition().add(this.getPosition())))
-                .peek(c -> WorldEngine.getCurrent().attach(c))
+                .peek(c -> OpenGG.asyncExec(() -> this.getWorld().attach(c)))
                 .forEach(c -> currentSpawns.add(((WorldAI) c).character));
     }
 
