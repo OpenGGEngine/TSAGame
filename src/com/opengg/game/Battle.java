@@ -17,9 +17,8 @@ import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.components.CameraComponent;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 public class Battle implements KeyboardListener {
@@ -39,17 +38,29 @@ public class Battle implements KeyboardListener {
 
     Item selectedItem;
 
+    AtomicBoolean done = new AtomicBoolean(true);
+
+    ItemEffect i = new ItemEffect();
+
+    boolean freeze = false;
+
+
+    Item poison = new Item("poison", "poison", "", true, true, true,Item.ItemType.ABILITY, List.of(i), "");
+
     Runnable onComplete = () -> {};
 
     HashMap<String, SpriteRenderComponent> fighterRenderers = new HashMap<>();
+    HashMap<String, HashSet<String>> statusEffects = new HashMap<>();
+    Queue<Runnable> hackyGarbage = new LinkedList<>();
 
     public Battle(BattleInfo info){
-        this.info = info;
+        this.info = info; i.value = 3;i.name="damage";
     }
 
     public void start(){
         KeyboardController.addKeyboardListener(this);
         info.allies.add("player0");
+        statusEffects.put("player0",new HashSet<>());
 
         for(var ally : info.allies){
             var renderer = new SpriteRenderComponent(CharacterManager.getExisting(ally).getSprite());
@@ -62,6 +73,7 @@ public class Battle implements KeyboardListener {
             renderer.setAngle(180);
             WorldEngine.getCurrent().attach(renderer.setPositionOffset(new Vector3f(3, 0, -6)).setScaleOffset(CharacterManager.getExisting(enemy).getSize()));
             fighterRenderers.put(enemy, renderer);
+            statusEffects.put(enemy,new HashSet<>());
         }
 
         WorldEngine.getCurrent().attach(new CameraComponent().setPositionOffset(new Vector3f(0,2,0)).setRotationOffset(new Quaternionf(new Vector3f(15,0,0))));
@@ -118,14 +130,17 @@ public class Battle implements KeyboardListener {
 
         battleMenu.setEnabled(false);
         setText("You have encountered a " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName() + "!", () -> {
-            infoBox.setText("What is your next move?");
+        });
+        freeze = false;
+        hackyGarbage.add(() -> {infoBox.setText("What is your next move?");
             battleMenu.setEnabled(true);
+            enableSubMenu(generalMenu);
+            updateSubMenus();
         });
 
-        enableSubMenu(generalMenu);
 
-        updateSubMenus();
     }
+
 
     public void enableSubMenu(GUIGroup menu){
         for(var sub : List.of(itemMenu, abilityMenu, generalMenu)){
@@ -238,6 +253,34 @@ public class Battle implements KeyboardListener {
         for(var enemy : info.enemies){
             processAI(enemy, false);
         }
+
+    }
+    public void runStatusEffects(){
+        System.out.println("done with ai");
+        if(statusEffects.isEmpty()){
+            infoBox.setText("What is your next move?");
+            battleMenu.setEnabled(true);
+            updateSubMenus();
+        }
+        for(var entry:statusEffects.entrySet()){
+            var source =CharacterManager.getExisting(entry.getKey());
+            for(var effect:entry.getValue()){
+                if(effect.equals("poison")){
+                    attack(source,source,poison);
+                    setText(source.getDisplayName() + " is poisoned.", () -> {
+                        infoBox.setText("What is your next move?");
+                        battleMenu.setEnabled(true);
+                        updateSubMenus();
+                    });
+                    freeze = false;
+                    hackyGarbage.add(()->{infoBox.setText("What is your next move?");
+                        battleMenu.setEnabled(true);
+                        enableSubMenu(generalMenu);
+                        updateSubMenus();});
+                }
+            }
+        }
+
     }
 
     private void processAI(String character, boolean ally){
@@ -252,11 +295,13 @@ public class Battle implements KeyboardListener {
         );
 
         if(items.isEmpty()){
+            freeze = false;
             setText(CharacterManager.getExisting(character).getDisplayName() + " has no attacks remaining!", () -> {
-                infoBox.setText("What is your next move?");
-                battleMenu.setEnabled(true);
                 updateSubMenus();
             });
+            updateSubMenus();
+            hackyGarbage.add(()->{runStatusEffects();});
+            return;
         }
 
         var attack = ArrayUtil.getRandom(items.keySet());
@@ -266,12 +311,11 @@ public class Battle implements KeyboardListener {
         }else{
             attack(CharacterManager.getExisting(character), null, ItemManager.generate(attack));
         }
-
+        freeze = false;
         setText(CharacterManager.getExisting(character).getDisplayName() + " used " + ItemManager.generate(attack).displayName + "!", () -> {
-            infoBox.setText("What is your next move?");
-            battleMenu.setEnabled(true);
-            updateSubMenus();
         });
+        updateSubMenus();
+        hackyGarbage.add(()->{runStatusEffects();});
 
     }
 
@@ -279,13 +323,15 @@ public class Battle implements KeyboardListener {
         if(attack == null) return;
 
         attack(Player.PLAYER, enemy, attack);
+        if(info.enemies.isEmpty()){
+            return;
+        }
         battleMenu.setEnabled(false);
         updateSubMenus();
-
+        freeze = false;
         setText("You used " + attack.displayName + "!", () -> {
-            runAIs();
         });
-
+        hackyGarbage.add(()->{runAIs();});
 
     }
 
@@ -296,7 +342,11 @@ public class Battle implements KeyboardListener {
             switch (effect.name){
                 case "damage":
                     if(targeted)
-                        damage(enemy, effect.value);
+                        if(source.equals(Player.PLAYER)){
+                            damage(enemy,effect.value*=(1+((float)Player.PLAYER.level/12)));
+                        }else {
+                            damage(enemy, effect.value);
+                        }
                     else
                         info.enemies.forEach(e -> damage(enemy, effect.value));
                     break;
@@ -306,10 +356,14 @@ public class Battle implements KeyboardListener {
                     else
                         info.allies.forEach(a -> heal(CharacterManager.getExisting(a), effect.value));
                     break;
+                case "poison":
+                    statusEffects.get(enemy.getId()).add("poison");
+                    return;
+
             }
         }
 
-        if(selectedItem.type == Item.ItemType.ITEM){
+        if(selectedItem != null && selectedItem.type == Item.ItemType.ITEM){
             source.getInventory().addItem(selectedItem.name, -1);
         }
 
@@ -349,25 +403,48 @@ public class Battle implements KeyboardListener {
 
     public void end(boolean success){
         if(success){
-            setText("You have defeated the enemy and acquired 10 gold!", () -> BattleManager.end(true));
+            Player.PLAYER.exp += 2;
+            int diff = Player.PLAYER.exp - Player.PLAYER.expNextLevel;
+            String levelup = "";
+            if(diff>=0){
+                Player.PLAYER.level++;
+                Player.PLAYER.exp = diff;
+                Player.PLAYER.expNextLevel = (int)(Math.pow(2.714f,Player.PLAYER.level/20)*10);
+                levelup+="You are now at level "+Player.PLAYER.level+"\n";
+            }
+            freeze = false;
+            setText(levelup+"You have defeated the enemy. \n You acquired 10 gold!", () -> BattleManager.end(true));
+            hackyGarbage.add(() -> BattleManager.end(true));
         }else{
+            freeze = false;
             setText("You have failed to defeat " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName(), () -> BattleManager.end(false));
+            hackyGarbage.add(() -> BattleManager.end(false));
         }
 
     }
 
     public void update(){
-
+        if(freeze){
+            if(!hackyGarbage.isEmpty())
+            hackyGarbage.poll().run();
+        }
     }
 
 
     @Override
     public void keyPressed(int key) {
         if(key == Key.KEY_SPACE){
-            if(onComplete != null && infoBox.isComplete()){
-                onComplete.run();
-                onComplete = null;
+            if(!infoBox.isComplete()){
+                infoBox.forceComplete();
+            }else{
+                freeze=true;
             }
+            /*if(onComplete != null && infoBox.isComplete()){
+                var currentRun = onComplete;
+                onComplete.run();
+                if(currentRun == onComplete)
+                    onComplete = null;
+            }*/
         }
     }
 
