@@ -21,6 +21,7 @@ import com.opengg.core.render.shader.ShaderController;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.render.window.WindowController;
 import com.opengg.core.render.window.WindowInfo;
+import com.opengg.core.system.GGBufferUtils;
 import com.opengg.core.world.Skybox;
 import com.opengg.core.world.World;
 import com.opengg.core.world.WorldEngine;
@@ -85,8 +86,8 @@ public class TSAGame extends GGApplication {
         ShaderController.setUniform("invertMultiplier", 0);
 
         GUI blackout = new GUI();
-        GUIButton start = new GUIButton(new Vector2f(0,0),new Vector2f(0.2f,0.3f), Texture.ofColor(Color.BLUE));
-        blackout.addItem("tex", new GUITexture(Texture.ofColor(Color.BLACK, 1), new Vector2f(0, 0), new Vector2f(1, 1)).setLayer(0.5f));
+
+        blackout.addItem("tex", new GUITexture(Texture.ofColor(Color.BLACK, 1), new Vector2f(0, 0), new Vector2f(1, 1)).setLayer(-0.5f));
         GUITextBox box = new GUITextBox(new Vector2f(0.25f,0), new Vector2f(0.5f,0.2f))
                 .setText("")
                 .setBackground(Texture.ofColor(Color.BLACK, 0.5f))
@@ -123,7 +124,10 @@ public class TSAGame extends GGApplication {
                 BindController.setEnabled(true);
                 new DialogueSequence((InteractableAI) WorldEngine.getCurrent().find("workerbee0")).start();
             });
-
+            GUIButton button = new GUIButton(new Vector2f(0.3f,0.1f),new Vector2f(0.4f,0.2f),Resource.getTexture("button.png"));
+            button.setOnClick(()->{anim.start();button.setEnabled(false);});
+            blackout.addItem("button",button);
+            //blackout.addItem("button1",button);
             AnimationManager.register(anim);
             //anim.start();
         } catch (NullPointerException e) {
@@ -155,7 +159,6 @@ public class TSAGame extends GGApplication {
     public void update(float delta) {
         WorldEngine.getCurrent().remove(WorldEngine.getCurrent().getAllDescendants().stream()
                 .filter(c -> c instanceof WorldEnemy).map(c -> (WorldEnemy)c)
-                .peek(c -> System.out.println(c.getCharacterType()))
                 .filter(c -> c.getCharacterType().equals("default"))
                 .findAny()
                 .orElse(null));
