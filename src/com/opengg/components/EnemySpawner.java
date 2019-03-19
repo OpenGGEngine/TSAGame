@@ -53,10 +53,24 @@ public class EnemySpawner extends Component {
     }
 
     @Override
-    public void onEnable(){
-        IntStream.range(currentSpawns.size(), amount)
+    public void onWorldLoad(){
+        this.getWorld().getAllDescendants()
+                .stream()
+                .filter(c -> c instanceof WorldEnemy)
+                .map(c -> (WorldEnemy)c)
+                .filter(c -> c.getCharacterType().equals(character))
+                .forEach(WorldEngine::markForRemoval);
+        if(amount == 1){
+            if(currentSpawns.isEmpty()){
+                OpenGG.asyncExec(() -> getWorld().attach(new WorldEnemy(CharacterManager.generate(character)).setPositionOffset(this.getPositionOffset())));
+            }
+        }else
+            IntStream.range(currentSpawns.size(), amount)
                 .mapToDouble(i -> (i / (float)amount) * 2 * FastMath.PI)
-                .mapToObj(d -> new Vector3f(FastMath.sin((float) d) * 5 + new Random().nextFloat()*4, 0, FastMath.cos((float) d) * 5 + new Random().nextFloat()*4))
+                .mapToObj(d -> new Vector3f(
+                        FastMath.cos((float) d) * 2 + new Random().nextFloat()*0.2f,
+                        0,
+                        FastMath.cos((float) d) * 2 + new Random().nextFloat()*0.2f))
                 .map(v -> new WorldEnemy(CharacterManager.generate(character)).setPositionOffset(v))
                 .peek(c -> c.setPositionOffset(c.getPosition().add(this.getPosition())))
                 .peek(c -> OpenGG.asyncExec(() -> this.getWorld().attach(c)))

@@ -113,7 +113,6 @@ public class WorldAI extends Component {
     @Override
     public void update(float delta){
         if(this.getPosition().y < 1) this.setPositionOffset(this.getPosition().setY(1));
-        System.out.println(behavior);
         var vel = BehaviorManager.getBehaviorFunc(behavior).apply(this, args);
         physics.getEntity().velocity = physics.getEntity().velocity.setX(vel.x).setZ(vel.y);
         sprite.setAngle((float) Math.toDegrees(FastMath.atan2(vel.y, vel.x)));

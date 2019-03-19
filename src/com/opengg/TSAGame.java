@@ -145,6 +145,12 @@ public class TSAGame extends GGApplication {
 
     @Override
     public void update(float delta) {
+        WorldEngine.getCurrent().remove(WorldEngine.getCurrent().getAllDescendants().stream()
+                .filter(c -> c instanceof WorldEnemy).map(c -> (WorldEnemy)c)
+                .peek(c -> System.out.println(c.getCharacterType()))
+                .filter(c -> c.getCharacterType().equals("default"))
+                .findAny()
+                .orElse(null));
         GameMenu.update();
         DialogueManager.update(delta);
         QuestManager.update(delta);

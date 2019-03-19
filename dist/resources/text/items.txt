@@ -17,6 +17,82 @@
 ]
 
 [
+    name=spitPoison;
+    displayName=Spit Poison;
+    desc=A sweet delicacy produced by bees;
+    unique=false;
+    usable=true;
+
+    sprite=items/honey.png;
+    type=item;
+
+    targeted=true;
+
+    {
+        name=poison;
+        value=3;
+    }
+]
+
+
+[
+    name=tunnelHome;
+    displayName=Create home tunnel;
+    desc=A sweet delicacy produced by bees;
+    unique=false;
+    usable=true;
+
+    sprite=items/honey.png;
+    type=item;
+
+    targeted=true;
+
+    {
+        name=heal;
+        value=20;
+    }
+]
+
+
+[
+    name=scratch;
+    displayName=Scratch;
+    desc=A sweet delicacy produced by bees;
+    unique=false;
+    usable=true;
+
+    sprite=items/honey.png;
+    type=item;
+
+    targeted=true;
+
+    {
+        name=damage;
+        value=5;
+    }
+]
+
+
+[
+    name=dam;
+    displayName=Make Dam;
+    desc=A sweet delicacy produced by bees;
+    unique=false;
+    usable=true;
+
+    sprite=items/honey.png;
+    type=item;
+
+    targeted=true;
+
+    {
+        name=heal;
+        value=8;
+    }
+]
+
+
+[
     name=stingerSpear;
     displayName=Stinger spear;
     desc=Spear with a bee stinger on the tip.

@@ -76,7 +76,7 @@ She'll fill you in on what's been going on.
 {name;queenGreeting}
 I've heard the buzz around here that you'd be coming, Simon!
 We heartily welcome you to our village.
-{quest;goToBeeville;say}
+{quest;goToBeeville;talkToQueen}
 {optionCount;1}
 {option0;queenGreeting2;Thank you, but why does everyone know me around here?}
 ]
@@ -133,26 +133,29 @@ attacks from the Dimensional Sword.
 
 [
 {name;queenEmakDiscussion7}
-Unfortunately it's being held by 3 of Emak's henchmen. However, one of my
-drones found some activity in a nearby cave, and we think that one of these
-pieces may be inside, guarded by the evil Master Mole.
+Unfortunately it's being held by 3 of Emak's henchmen.
+However, one of my drones found some activity in
+a nearby cave, and we think that one of these pieces
+may be inside, guarded by the evil Master Mole.
 {next;queenEmakDiscussion8}
 ]
 
 [
 {name;queenEmakDiscussion8}
-Could you help our town get rid of this looming threat? We'll be glad to
-help in any way we can, but none of us can go in there alone.
+Could you help our town get rid of this looming threat?
+We'll be glad to help in any way we can, but none of
+ us can go in there alone.
 {optionCount;1}
 {option0;queenEmakDiscussion9;Sure, I'll see what I can do}
 ]
 
 [
 {name;queenEmakDiscussion9}
-Really? We will forever be in your debt. To get there, simply go out
-through the western road. You should be able to see it right after leaving
-the palace.
-{quest;boss}
+Really? We will forever be in your debt. To get there,
+simply go out through the western road. You should be
+able to see it right after leaving the palace.
+Come talk to me after you defeat the mole
+{quest;killMole}
 ]
 
 [

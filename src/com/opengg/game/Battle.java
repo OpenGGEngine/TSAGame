@@ -256,16 +256,18 @@ public class Battle implements KeyboardListener {
 
     }
     public void runStatusEffects(){
-        System.out.println("done with ai");
         if(statusEffects.isEmpty()){
+            System.out.println("asdf");
             infoBox.setText("What is your next move?");
             battleMenu.setEnabled(true);
             updateSubMenus();
         }
+        boolean did = false;
         for(var entry:statusEffects.entrySet()){
             var source =CharacterManager.getExisting(entry.getKey());
             for(var effect:entry.getValue()){
                 if(effect.equals("poison")){
+                    did = true;
                     attack(source,source,poison);
                     setText(source.getDisplayName() + " is poisoned.", () -> {
                         infoBox.setText("What is your next move?");
@@ -279,6 +281,14 @@ public class Battle implements KeyboardListener {
                         updateSubMenus();});
                 }
             }
+        }
+        if(!did){
+
+                infoBox.setText("What is your next move?");
+                battleMenu.setEnabled(true);
+                enableSubMenu(generalMenu);
+                updateSubMenus();
+
         }
 
     }

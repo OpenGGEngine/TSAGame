@@ -113,6 +113,9 @@ public class SpriteRenderComponent extends RenderComponent {
         else
             current = forwards ? textures.get("front" + animToUse) : textures.get("back" + animToUse);
 
+        if(current == null)
+            current = textures.get("idle");
+
         current.update(delta);
     }
 
