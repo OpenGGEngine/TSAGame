@@ -76,8 +76,8 @@ public class GameMenu {
                 () -> current++));
 
         inventoryMenu = new GUIGroup(new Vector2f(0,0));
-        inventoryMenu.addItem("title",
-                new GUIText(Text.from("Inventory").size(0.18f).center(true), Resource.getTruetypeFont("realfont.ttf"), new Vector2f(0f,0f)));
+        //inventoryMenu.addItem("title",
+          //      new GUIText(Text.from("Inventory").size(0.18f).center(true), Resource.getTruetypeFont("realfont.ttf"), new Vector2f(0f,0f)));
 
         inventoryMenu.addItem("holder", new GUIGroup(new Vector2f(0,0)));
 

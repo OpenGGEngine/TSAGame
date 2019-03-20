@@ -395,7 +395,7 @@ public class Battle implements KeyboardListener {
                 case "damage":
                     if(targeted)
                         if(source.equals(Player.PLAYER)){
-                            damage(enemy,effect.value*=(1+((float)Player.PLAYER.level/12)));
+                            damage(enemy,effect.value*(1+((float)Player.PLAYER.level/12)));
                         }else {
                             damage(enemy, effect.value);
                         }
