@@ -55,6 +55,8 @@ public class Battle implements KeyboardListener {
 
     public Battle(BattleInfo info){
         this.info = info; i.value = 3;i.name="damage";
+        System.out.println(info.allies);
+        System.out.println(info.enemies);
     }
 
     public void start(){
@@ -359,11 +361,15 @@ public class Battle implements KeyboardListener {
         }else{
             attack(CharacterManager.getExisting(character), null, ItemManager.generate(attack));
         }
+        fighterRenderers.get((String)info.enemies.toArray()[0]).setAnimToUse("attack");
+
         freeze = false;
         setText(CharacterManager.getExisting(character).getDisplayName() + " used " + ItemManager.generate(attack).displayName + "!", () -> {
         });
         updateSubMenus();
-        hackyGarbage.add(()->{runStatusEffects();});
+        hackyGarbage.add(()->{
+            fighterRenderers.get((String)info.enemies.toArray()[0]).setAnimToUse("idle");
+            runStatusEffects();});
 
     }
 
