@@ -67,13 +67,13 @@ public class GameMenu {
                 new Vector2f(0.040f,0.21f),
                 new Vector2f(0.08f, 0.06f),
                 Resource.getTexture("trans.png"),
-                () -> current=3));
+                () -> current=2));
 
         menuGroup.addItem("quit", new GUIButton(
                 new Vector2f(0.040f,0.087f),
                 new Vector2f(0.08f, 0.06f),
                 Resource.getTexture("trans.png"),
-                () -> current++));
+                () -> System.exit(0)));
 
         inventoryMenu = new GUIGroup(new Vector2f(0,0));
         //inventoryMenu.addItem("title",
@@ -123,6 +123,7 @@ public class GameMenu {
 
 
         if(current == 0){
+            pointer = FastMath.clamp(pointer, 0, Math.max(Player.PLAYER.getInventory().getItems().size()-1,0));
             inventoryMenu.setEnabled(true);
             questMenu.setEnabled(false);
             playerMenu.setEnabled(false);
