@@ -4,6 +4,7 @@ import com.opengg.TSAGame;
 import com.opengg.core.engine.OpenGG;
 import com.opengg.core.math.Vector3f;
 import com.opengg.core.physics.collision.AABB;
+import com.opengg.core.physics.collision.ConvexHull;
 import com.opengg.core.physics.collision.Floor;
 import com.opengg.core.util.GGInputStream;
 import com.opengg.core.util.GGOutputStream;
@@ -56,14 +57,11 @@ public class TSAWorldChangeZone extends WorldChangeZone {
                 pre:
                 for (var obj : WorldEngine.getCurrent().getSystem().getColliders()) {
                     for (var collider : colls) {
-                        if(obj.getColliders().size() == 2 && obj.getColliders().get(1) instanceof Floor) continue pre;
-                        if (collider.getColliderGroup() == obj) {
-                            System.out.println("Found match");
+                        if (collider.getColliderGroup() == obj || !(obj.getColliders().stream().anyMatch(c -> c instanceof ConvexHull))) {
                             continue pre;
-                        } else {
-                            //OpenGG.asyncExec(() -> WorldEngine.getCurrent().getSystem().removeCollider(obj));
                         }
                     }
+                    OpenGG.asyncExec(() -> WorldEngine.getCurrent().getSystem().removeCollider(obj));
                 }
 
             });

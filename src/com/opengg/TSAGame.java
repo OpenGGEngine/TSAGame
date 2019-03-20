@@ -1,35 +1,30 @@
 package com.opengg;
 
-import com.opengg.components.*;
+import com.opengg.components.InteractableAI;
+import com.opengg.components.PlayerWorldComponent;
+import com.opengg.components.WorldEnemy;
+import com.opengg.components.WorldEntryZone;
 import com.opengg.core.animation.Animation;
 import com.opengg.core.animation.AnimationManager;
 import com.opengg.core.audio.SoundEngine;
-import com.opengg.core.audio.Soundtrack;
 import com.opengg.core.console.GGConsole;
 import com.opengg.core.engine.BindController;
 import com.opengg.core.engine.GGApplication;
 import com.opengg.core.engine.OpenGG;
-import com.opengg.core.engine.Resource;
-import com.opengg.core.gui.*;
+import com.opengg.core.gui.GUI;
+import com.opengg.core.gui.GUIButton;
+import com.opengg.core.gui.GUIController;
+import com.opengg.core.gui.GUITexture;
 import com.opengg.core.io.ControlType;
-import com.opengg.core.math.Quaternionf;
 import com.opengg.core.math.Vector2f;
 import com.opengg.core.math.Vector3f;
-import com.opengg.core.render.RenderEngine;
-import com.opengg.core.render.light.Light;
 import com.opengg.core.render.shader.ShaderController;
 import com.opengg.core.render.texture.Texture;
 import com.opengg.core.render.window.WindowController;
 import com.opengg.core.render.window.WindowInfo;
-import com.opengg.core.system.GGBufferUtils;
-import com.opengg.core.world.Skybox;
-import com.opengg.core.world.World;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
 import com.opengg.core.world.components.Component;
-import com.opengg.core.world.components.LightComponent;
-import com.opengg.core.world.components.ModelComponent;
-import com.opengg.core.world.components.SoundtrackComponent;
 import com.opengg.dialogue.DialogueManager;
 import com.opengg.dialogue.DialogueSequence;
 import com.opengg.game.*;
@@ -117,12 +112,16 @@ public class TSAGame extends GGApplication {
                 BindController.setEnabled(true);
                 new DialogueSequence((InteractableAI) WorldEngine.getCurrent().find("workerbee0")).start();
             });
-            GUIButton button = new GUIButton(new Vector2f(0.3f,0.1f),new Vector2f(0.4f,0.2f),Resource.getTexture("button.png"));
-            button.setOnClick(()->{anim.start();button.setEnabled(false);});
-            blackout.addItem("button",button);
+            //GUIButton button = new GUIButton(new Vector2f(0.3f,0.1f),new Vector2f(0.4f,0.2f),Resource.getTexture("button.png"));
+            //button.setLayer(0.7f);
+            //button.setOnClick(()->{anim.start();button.setEnabled(false);});
+           // blackout.addItem("button",button);
             //blackout.addItem("button1",button);
             AnimationManager.register(anim);
             anim.start();
+
+            SoundEngine.setGlobalGain(0.5f);
+
         } catch (NullPointerException e) {
             GGConsole.error("Failed to find world!");
         }
