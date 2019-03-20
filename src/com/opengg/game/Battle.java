@@ -35,7 +35,9 @@ public class Battle implements KeyboardListener {
     GUIGroup enemyMenu;
     GUIGroup allyMenu;
     GUITextBox infoBox;
-
+    GUITexture gameOver = new GUITexture(Resource.getTexture("gameover.png"),new Vector2f(0,0),new Vector2f(1));
+    GUIButton yes = new GUIButton(new Vector2f(0.15f,0.2f),new Vector2f(0.3f,0.1f),Resource.getTexture("trans.png"));
+    GUIButton no = new GUIButton(new Vector2f(0.6f,0.2f),new Vector2f(0.3f,0.1f),Resource.getTexture("trans.png"));
     GUIGroup infoMenu;
 
     Item selectedItem;
@@ -60,11 +62,19 @@ public class Battle implements KeyboardListener {
     }
 
     public void start(){
+        yes.setOnClick(()->{Player.PLAYER.setHealth((((float)Player.PLAYER.getMaxHealth())/4) * 3);BattleManager.end(false);});
+        no.setOnClick(()->{System.exit(0);});
         GameMenu.dialogDisable = true;
         GameMenu.setEnabled(false);
         KeyboardController.addKeyboardListener(this);
         info.allies.add("player0");
         statusEffects.put("player0",new HashSet<>());
+        battleGUI.addItem("gameOver",gameOver.setLayer(-0.5f));
+        battleGUI.addItem("yes",yes);
+        battleGUI.addItem("no",no);
+        gameOver.setEnabled(false);
+        yes.setEnabled(false);
+        no.setEnabled(false);
 
         for(var ally : info.allies){
             var renderer = new SpriteRenderComponent(CharacterManager.getExisting(ally).getSprite());
@@ -302,34 +312,30 @@ public class Battle implements KeyboardListener {
             battleMenu.setEnabled(true);
             updateSubMenus();
         }
-        boolean did = false;
+
         for(var entry:statusEffects.entrySet()){
             var source =CharacterManager.getExisting(entry.getKey());
             for(var effect:entry.getValue()){
                 if(effect.equals("poison")){
-                    did = true;
-                    attack(source,source,poison);
+                    System.out.println("poisoned");
+                    hackyGarbage.add(()->{
+                        System.out.println("executed");
+                        freeze = false;attack(source,source,poison);
                     setText(source.getDisplayName() + " is poisoned.", () -> {
-                        infoBox.setText("What is your next move?");
-                        battleMenu.setEnabled(true);
-                        updateSubMenus();
-                    });
-                    freeze = false;
-                    hackyGarbage.add(()->{infoBox.setText("What is your next move?");
-                        battleMenu.setEnabled(true);
-                        enableSubMenu(generalMenu);
-                        updateSubMenus();});
+                    })
+                    ;});
+                 
                 }
             }
-        }
-        if(!did){
-
-                infoBox.setText("What is your next move?");
-                battleMenu.setEnabled(true);
-                enableSubMenu(generalMenu);
-                updateSubMenus();
 
         }
+        hackyGarbage.add(()->{
+            System.out.println("recycled");
+            infoBox.setText("What is your next move?");
+            battleMenu.setEnabled(true);
+            enableSubMenu(generalMenu);
+            updateSubMenus();});
+
 
     }
 
@@ -423,6 +429,7 @@ public class Battle implements KeyboardListener {
         }
 
         if(selectedItem != null && selectedItem.type == Item.ItemType.ITEM){
+            if(source.getInventory().getItemCount(selectedItem.name) > 0)
             source.getInventory().addItem(selectedItem.name, -1);
         }
 
@@ -440,11 +447,11 @@ public class Battle implements KeyboardListener {
             if(info.enemies.contains(target.getId())){
                 info.enemies.remove(target.getId());
                 if(info.enemies.isEmpty()){
-                    end(true);
+                    hackyGarbage.add(()->{end(true);});
                 }
             }else{
                 if(target.getName().equals("player")){
-                    end(false);
+                    hackyGarbage.add(()->{end(false);});
                 }else{
                     info.allies.remove(target.getId());
                 }
@@ -460,7 +467,9 @@ public class Battle implements KeyboardListener {
     }
 
     public void end(boolean success){
+        battleMenu.setEnabled(false);
         updateSubMenus();
+        statusEffects.clear();
         if(success){
             Player.PLAYER.exp += 2;
             int diff = Player.PLAYER.exp - Player.PLAYER.expNextLevel;
@@ -477,17 +486,26 @@ public class Battle implements KeyboardListener {
         }else{
             freeze = false;
             setText("You have failed to defeat " + CharacterManager.getExisting((String) info.enemies.toArray()[0]).getDisplayName(), () -> BattleManager.end(false));
-            hackyGarbage.add(() -> BattleManager.end(false));
+            if(Player.PLAYER.getHealth()>0) {
+                hackyGarbage.add(() -> {BattleManager.end(false);});
+            }else {
+                System.out .println("failed");
+                hackyGarbage.clear();
+                hackyGarbage.add(() -> {gameOver.setEnabled(true);
+                    yes.setEnabled(true);
+                    no.setEnabled(true);
+                    battleMenu.setEnabled(false);
+                    });
+            }
         }
-        statusEffects.clear();
-        GameMenu.dialogDisable = false;
 
     }
 
     public void update(){
         if(freeze){
-            if(!hackyGarbage.isEmpty())
-            hackyGarbage.poll().run();
+            if(!hackyGarbage.isEmpty()) {
+                hackyGarbage.poll().run();
+            }
         }
     }
 

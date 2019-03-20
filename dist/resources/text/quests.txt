@@ -1,6 +1,6 @@
 [
     name=goToBeeville;
-    displayName=Go to Bee Village;
+    displayName=Bee Village;
 
     firstState=talkToBee;
 
@@ -11,7 +11,7 @@
 
     {
         name=followToTown;
-        displayName=Follow worker bee to Bee Village;
+        displayName=Enter Bee Village;
 
         completionType=world;
 
@@ -30,7 +30,7 @@
 
 [
     name=killMole;
-    displayName=Defeat Master Mole;
+    displayName=Fight Master Mole;
 
     firstState=goToDungeon;
 

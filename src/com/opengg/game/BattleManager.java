@@ -13,6 +13,7 @@ import com.opengg.core.render.texture.Texture;
 import com.opengg.core.world.World;
 import com.opengg.core.world.WorldEngine;
 import com.opengg.core.world.WorldLoader;
+import com.opengg.gui.GameMenu;
 
 import java.awt.*;
 
@@ -59,6 +60,7 @@ public class BattleManager {
     }
 
     public static void end(boolean success){
+        GameMenu.dialogDisable = false;
         SoundtrackHandler.setSoundtrack(lasts);
         GUIController.deactivateGUI("battle");
         WorldEngine.useWorld(last);

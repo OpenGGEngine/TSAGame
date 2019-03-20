@@ -11,6 +11,7 @@ import com.opengg.core.console.GGConsole;
 import com.opengg.core.engine.BindController;
 import com.opengg.core.engine.GGApplication;
 import com.opengg.core.engine.OpenGG;
+import com.opengg.core.engine.Resource;
 import com.opengg.core.gui.GUI;
 import com.opengg.core.gui.GUIButton;
 import com.opengg.core.gui.GUIController;
@@ -83,7 +84,7 @@ public class TSAGame extends GGApplication {
 
         GUI blackout = new GUI();
         GUIButton start = new GUIButton(new Vector2f(0,0),new Vector2f(0.2f,0.3f), Texture.ofColor(Color.BLUE));
-        blackout.addItem("tex", new GUITexture(Texture.ofColor(Color.BLACK, 1), new Vector2f(0, 0), new Vector2f(1, 1)).setLayer(0.5f));
+        blackout.addItem("tex", new GUITexture(Texture.ofColor(Color.BLACK, 1), new Vector2f(0, 0), new Vector2f(1, 1)).setLayer(-0.5f));
         
         GUIController.addAndUse(blackout, "black");
 
@@ -112,13 +113,13 @@ public class TSAGame extends GGApplication {
                 BindController.setEnabled(true);
                 new DialogueSequence((InteractableAI) WorldEngine.getCurrent().find("workerbee0")).start();
             });
-            //GUIButton button = new GUIButton(new Vector2f(0.3f,0.1f),new Vector2f(0.4f,0.2f),Resource.getTexture("button.png"));
-            //button.setLayer(0.7f);
-            //button.setOnClick(()->{anim.start();button.setEnabled(false);});
-           // blackout.addItem("button",button);
+            GUIButton button = new GUIButton(new Vector2f(0.3f,0.1f),new Vector2f(0.4f,0.2f),Resource.getTexture("button.png"));
+            button.setLayer(0.7f);
+            button.setOnClick(()->{anim.start();button.setEnabled(false);});
+           blackout.addItem("button",button);
             //blackout.addItem("button1",button);
             AnimationManager.register(anim);
-            anim.start();
+            //anim.start();
 
             SoundEngine.setGlobalGain(0.5f);
 
