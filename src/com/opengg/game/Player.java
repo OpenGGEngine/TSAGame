@@ -15,7 +15,7 @@ public class Player extends Character {
     List<String> partners = new ArrayList<>();
 
     public Player(){
-        super("player", new Inventory(Map.of("gold", 100,"honey",2,"stingerSpear",1)), 100, "Player", Configuration.get("playerSprite"), false, "player0", 2);
+        super("player", new Inventory(Map.of("gold", 100,"honey",2,"stingerSpear",1)), 80, "Player", Configuration.get("playerSprite"), false, "player0", 2);
     }
 
     public int getMoney(){

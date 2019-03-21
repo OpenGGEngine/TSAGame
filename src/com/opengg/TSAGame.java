@@ -96,7 +96,7 @@ public class TSAGame extends GGApplication {
         BindController.addBind(ControlType.KEYBOARD, "interact", KEY_ENTER);
 
         try {
-
+            GameMenu.dialogDisable = true;
             WorldEngine.useWorld(WorldLoader.loadWorld("flowerforest.bwf"));
             BindController.setEnabled(false);
 

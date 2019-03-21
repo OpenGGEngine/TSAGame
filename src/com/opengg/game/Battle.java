@@ -317,9 +317,7 @@ public class Battle implements KeyboardListener {
             var source =CharacterManager.getExisting(entry.getKey());
             for(var effect:entry.getValue()){
                 if(effect.equals("poison")){
-                    System.out.println("poisoned");
                     hackyGarbage.add(()->{
-                        System.out.println("executed");
                         freeze = false;attack(source,source,poison);
                     setText(source.getDisplayName() + " is poisoned.", () -> {
                     })
@@ -330,7 +328,6 @@ public class Battle implements KeyboardListener {
 
         }
         hackyGarbage.add(()->{
-            System.out.println("recycled");
             infoBox.setText("What is your next move?");
             battleMenu.setEnabled(true);
             enableSubMenu(generalMenu);
@@ -489,12 +486,12 @@ public class Battle implements KeyboardListener {
             if(Player.PLAYER.getHealth()>0) {
                 hackyGarbage.add(() -> {BattleManager.end(false);});
             }else {
-                System.out .println("failed");
                 hackyGarbage.clear();
                 hackyGarbage.add(() -> {gameOver.setEnabled(true);
                     yes.setEnabled(true);
                     no.setEnabled(true);
                     battleMenu.setEnabled(false);
+                    enemyMenu.setEnabled(false);
                     });
             }
         }
